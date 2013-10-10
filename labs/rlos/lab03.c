@@ -11,7 +11,7 @@ int main(int argc, char* argv[], char* env[]) {
 	// Since the argument list is variable we must have some way of telling C when it is to end.
 	// The NULL terminator does this job.
 	// Поэтому чтобы сказать что параметры закончились вызов execl в вашем случае должен выглядеть так
-	// xecl(argv[1], argv[1], argv[0], 0); 
+	// execl(argv[1], argv[1], argv[0], 0); 
 	execl(argv[1], argv[1], argv[0]); 
 	printf("Ошибка передачи управления\n");
 	// Так как следующие строки выполнятся только в случае неудачи смены контекста, 
