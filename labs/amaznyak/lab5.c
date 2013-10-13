@@ -1,4 +1,3 @@
-
 #include <sys/types.h>
 #include <unistd.h>
 #include <time.h>
@@ -66,7 +65,7 @@ int main(){
 
 			//close(fd[1]);
 
-			/* Пробуем прочитать из pip'а 14 байт в массив, т.е. всю записанную строку */
+			/* Пробуем прочитать из pip'а число*/
 
 			size = read(fd[0], res[0], 14);
 
