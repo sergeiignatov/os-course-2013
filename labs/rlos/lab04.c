@@ -17,10 +17,7 @@ int main(int argc, char* argv[], char* env[]) {
 	}
 	
 	if(size != read(fd, string, size)){
-		// формально мы не смогли прочитать все или хоть что то а не записать,
-		// но видимо вы имели в виду не смогли записать инфу из файла в переменную программы
-		// так что это придирка
-		printf("Can\'t write all string\n"); 
+		printf("Can\'t read first %d bytes\n", size); 
 		exit(-1); 
 	} 
 	
