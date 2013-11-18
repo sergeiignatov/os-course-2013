@@ -1,0 +1,4 @@
+for file in ./*.c
+do
+  gcc $file -g -lpthread -o $(basename ${file} .c)
+done
