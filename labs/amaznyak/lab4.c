@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// потрясающе ненужная лаба, так как заданию для лабы №4 не соответствует
 int main(){
 
 	int fd; 
