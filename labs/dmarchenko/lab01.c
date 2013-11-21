@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+// обработайте случай ошибки при вызове fork() и будет отлично
 int main()
 {
 	pid_t pid;
