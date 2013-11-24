@@ -16,7 +16,7 @@ int main(int argc, char* argv[], char* env[])
 	if (pipe(fd_p) < 0)
 	{
 		printf("Can't create pipe\n");
-		exit(-1);
+		exit(-1);  
 	}
 	
 	if (pipe(fd_c) < 0)
