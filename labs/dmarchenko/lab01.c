@@ -17,7 +17,12 @@ int main()
 			printf("%d\n", i*2);
 		}
 		
-		return 0;
+		exit (0);
+	}
+	if (pid == -1)
+	{
+		printf ("Ошибка!");
+		exit (-1);
 	}
 	printf("id отца: %d\n", getpid());
 	printf("id сына: %d\n", pid);
@@ -25,6 +30,6 @@ int main()
 	{
 		printf("%d\n", i/2);
 	}
-	return 0;
+	exit (0);
 	
 }
