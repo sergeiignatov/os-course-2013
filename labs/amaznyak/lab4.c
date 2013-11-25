@@ -1,7 +1,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <stdio.h>
-#incl#include <sys/types.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <time.h>
 #include <stdio.h>
