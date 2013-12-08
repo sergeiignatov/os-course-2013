@@ -1,98 +1,132 @@
-//Здорово что у вас получилось скопировать пример с того что мы смотрели на практике, но это не похоже на задание описанное в лабораторке
-
-/*
-Программа для иллюстрации работы двух нитей исполнения
-Каждая нить исполнения просто увеличивает на 1 разделяемую переменную a.
-*/
+//laboratory 5 with five extra threads
 
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#define thcount 5
+
+int choose[thcount]; 
+int number[thcount];
+
 int a = 0;
 
-/*
-Переменная a является глобальной статической для всей программы,
-поэтому она будет разделяться обеими нитями исполнения.
-*/
 
-/*
-Ниже следует текст функции, которая будет ассоциирована со 2-м thread'ом
-*/
+int compare(int a, int b, int c, int d) {
 
-static void *mythread(void *dummy)
-
-/*
-Параметр dummy в нашей функции не используется и присутствует только для
-совместимости типов данных. По той же причине функция возвращает значение
-void *, хотя это никак не используется в программе.
-*/
-
-{
-
-        pthread_t mythid; /* Для идентификатора нити исполнения */
-
-
-        /*
-        Заметим, что переменная mythidявляется динамической локальной переменной функции
-        mythread(), т. е. помещается в стеке и, следовательно, не разделяется нитями исполнения.
-        */
-
-        /*
-        Запрашиваем идентификатор thread'а
-        */
-
-        mythid = pthread_self();
-
-        a = a+1;
-
-        printf("Thread %d, Calculation result = %d\n", mythid, a);
-
-        return NULL;
+  int result = 0;
+	
+  if (a < c) {
+	  
+    result = 1;
+	  
+  } else if (a == c && b < d) {
+	  
+    result = 1;
+	  
+  }
+  
+  return result;
+    
 }
 
-/*
-Функция main() - она же ассоциированная функция главного thread'а
-*/
+int max() {
+	
+  int result = number[0];
+	
+  int i;
+	
+  for (i = 1; i < thcount; i++) {
+	    
+    if (number[i] > result) {
+		
+      result = number[i];
+		
+    }
+	
+  }
+    
+  return result;
+    
+}
 
-int main()
-{
-        pthread_t thid, mythid;
-        int result;
+static void *mythread(void *dummy) {
 
-        /*
-        Пытаемся создать новую нить исполнения, ассоциированную с функцией mythread().
-        Передаем ей в качестве параметра значение NULL.
-        В случае удачи в переменную thid занесется идентификатор нового thread'а. Если возникнет ошибка - прекратим работу.
-        */
+  pthread_t mythid;
+  mythid = pthread_self();
+	
+  int j;
+  int i = *(int*)dummy;
 
-        result = pthread_create( &thid, (pthread_attr_t *)NULL, &mythread, NULL);
+  //bakery algorithm
+	
+  choose[i] = 1;
+  number[i] = max() + 1;
+  choose[i] = 0;
+	
+  for (j = 0; j < thcount; j++) {
+	  
+    while(choose[i]);
+    while(number[j] != 0 && compare(number[j],i,number[i],j));
+	    
+  }
 
-        if(result != 0){
-                printf ("Error on thread create, return value = %d\n", result);
-                exit(-1);
-        }
+  //critical section
+  
+  a = a + 1;
 
-        printf("Thread created, thid = %d\n", thid);
+  printf("Thread %d, Calculation result = %d\n", mythid, a);
+  
+  number[i] = 0;
+  
+  //end critical section
 
-        /*
-        Запрашиваем идентификатор главного thread'а
-        */
+  return NULL;
+	
+}
 
-        mythid = pthread_self();
+int main() {
+	
+  pthread_t thid[thcount], mythid;
+	
+  int result;
+	
+  int i;
+	
+  for ( i = 0; i < thcount; i++ ) {
+	  
+    choose[i] = 0; 
+    number[i] = 0;
+	  
+  }   
+  
+  for ( i = 0; i < thcount; i++ ) {
+	  
+    result = pthread_create( &thid[i], (pthread_attr_t *)NULL, &mythread, (void*)&i);
+	  
+    if(result != 0) {
+	    
+      printf ("Error on thread create, return value = %d\n", result);
+      exit(-1);
+	    
+    }
+    
+    printf("Thread created, thid = %d\n", thid[i]);
+    
+  }
+  
+  mythid = pthread_self();
 
-        a = a+1;
+  a = a + 1;
 
-        printf("Thread %d, Calculation result = %d\n", mythid, a);
-
-        /*
-        Ожидаем завершения порожденного thread'a, не интересуясь какое значение он нам вернет.
-        Если не выполнить вызов этой функции, то возможна ситуация, когда мы завершим функцию main()
-        до того, как выполнится порожденный thread, что автоматически повлечет его завершение,
-        исказив результаты.
-        */
-
-        pthread_join(thid, (void **)NULL);
-
-        return 0;
+  printf("Thread %d, Calculation result = %d\n", mythid, a);
+  
+  for ( i = 0; i < thcount; i++ ) {
+	  
+    pthread_join(thid[i], (void **)NULL);
+	  
+  }
+  
+  return 0;
+  
 }
