@@ -1,4 +1,4 @@
-﻿#include <sys/types.h>
+#include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
@@ -28,12 +28,12 @@ int main(int argc, char* argv[], char* env[]) {
         exit(-1);
     }
 
-    if((shmid = shmget(key, RESEARCHES_COUNT*RESEARCH_LENGTH*sizeof(char), 0666|IPC_CREAT|IPC_EXCL)) < 0){
+    if((shmid = shmget(key, RESEARCHES_COUNT*RESEARCH_LENGTH*sizeof(int), 0666|IPC_CREAT|IPC_EXCL)) < 0){
         if(errno != EEXIST){
             printf("Can\'t create shared memory\n");
             exit(-1);
         } else {
-            if((shmid = shmget(key, RESEARCHES_COUNT*RESEARCH_LENGTH*sizeof(char), 0)) < 0){
+            if((shmid = shmget(key, RESEARCHES_COUNT*RESEARCH_LENGTH*sizeof(int), 0)) < 0){
                 printf("Can\'t find shared memory\n");
                 exit(-1);
             }
