@@ -10,14 +10,23 @@
 #define FULL_PRIVEGIES 0777
 #define SHM_SIZE 8192
 #define MYNAME "lab901"
- 
+#define SEM_NAME "/mysem"
+
 int main(){
 
+sem_t *sema_n;
+int ret,val;
 char *array;
 int shm_fd;
 pid_t pid;
 
 char pathname[] = "lab901.c";
+
+if ((sema_n = sem_open(SEM_NAME, O_CREAT, 0600, 1)) ==
+                                            SEM_FAILED){
+    perror("sem_open");
+    return -1;
+}
 
 pid = fork();
   
@@ -35,6 +44,8 @@ if (pid == 0) {
         }
 }
 else {  
+        sem_getvalue(sema_n, &val);
+        printf("semaphore value = %d\n", val);
         /* Получаем дескриптор общей памяти */
         if ((shm_fd = shm_open("my_shm", O_CREAT | O_RDWR, 0666)) ==
                                                                 -1){
@@ -67,14 +78,19 @@ else {
         int i;
         i = 0;
         fd = open ("./lab901.c", O_RDONLY);
-
+        
+        sem_wait(sema_n);
         while ((read (fd, &array[i], 1)) > 0){
                 i++;
         }
 
         array[i+1]=EOF;
-
+        
+        if (sem_post(sema_n) != 0)
+        perror("post error");
+        
         munmap(array, SHM_SIZE);
+        sem_close(sema_n);
         close(shm_fd);
         printf("\nWriting of text this programm successfull\n");
         
