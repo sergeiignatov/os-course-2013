@@ -74,7 +74,7 @@ else {
 
         array[i+1]=EOF;
 
-        munmap(vaddr, SHM_SIZE);
+        munmap(array, SHM_SIZE);
         close(shm_fd);
         printf("\nWriting of text this programm successfull\n");
         
