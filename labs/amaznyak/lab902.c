@@ -17,7 +17,7 @@ key_t key;
 int fd;
 printf("%s : Im start \n", MYNAME);
 
-char pathname[] = "lab701.c";
+char pathname[] = "lab901.c";
 
 if((key = ftok(pathname, 0)) < 0){
 printf("%s : Can\'t generate key\n", MYNAME);
