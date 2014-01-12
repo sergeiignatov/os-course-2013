@@ -68,7 +68,7 @@ else {
         i = 0;
         fd = open ("./lab901.c", O_RDONLY);
 
-        while ((flag = read (fd, &array[i], 1)) > 0){
+        while ((read (fd, &array[i], 1)) > 0){
                 i++;
         }
 
