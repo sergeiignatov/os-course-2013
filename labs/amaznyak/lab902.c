@@ -51,7 +51,6 @@ printf("%s : Can't free shared memory\n", MYNAME);
 printf("%s : \nAll shared mamory released\n\n", MYNAME);
 
 return 0;
-<<<<<<< HEAD
+
 } 
-=======
-} 
+
