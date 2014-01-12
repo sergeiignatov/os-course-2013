@@ -22,6 +22,9 @@ printf("%s : Im start \n", MYNAME);
 char pathname[] = "lab901.c";
 
 /* Получаем дескриптор общей памяти */
+  sem_getvalue(sema_n, &val);
+  printf("semaphore value = %d\n", val);
+  
   if ((shm_fd = shm_open("my_shm", O_CREAT | O_RDWR, 0666)) ==
                                                           -1){
     perror("cannot open");
@@ -43,7 +46,7 @@ char pathname[] = "lab901.c";
     perror("cannot mmap");
     return -1;
   }
- 
+  sem_wait(sema_n);
   /* Блокируем общую память. Не забываем про этот шаг */
   if (mlock(vaddr, SHM_SIZE) != 0){
     perror("cannot mlock");
@@ -61,10 +64,14 @@ while (array[i] != EOF ){
         ++i;
 }
 printf("%s \n", array);
-
+if (sem_post(sema_n) != 0)
+    perror("post error");
 munmap(vaddr, SHM_SIZE);
+
+sem_close(sema_n);
+sem_unlink(SEM_NAME);
+
 close(shm_fd);
-/* Удаляем сегмент общей памяти */
 shm_unlink("my_shm");
 
 printf("%s : \nAll shared mamory released\n\n", MYNAME);
