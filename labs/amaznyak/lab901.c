@@ -52,7 +52,7 @@ else {
          * Подключаем общую память в адресное пространство. Флаг
          * MAP_SHARED говорит, что это подключение общей памяти.
          */
-        if ((array = mmap(0, SHM_SIZE, PROT_WRITE, MAP_SHARED,
+        if ((array =(char *) mmap(0, SHM_SIZE, PROT_WRITE, MAP_SHARED,
                      shm_fd, 0)) == MAP_FAILED){
           perror("cannot mmap");
           return -1;
