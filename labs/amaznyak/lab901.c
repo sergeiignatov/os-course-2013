@@ -8,14 +8,13 @@
 #include <stdlib.h>
 
 #define FULL_PRIVEGIES 0777
-#define LIST_SIZE 8192
+#define SHM_SIZE 8192
 #define MYNAME "lab901"
  
 int main(){
 
 char *array;
-int md, fd, flag;
-key_t key;
+int shm_fd;
 pid_t pid;
 
 char pathname[] = "lab901.c";
@@ -31,31 +30,38 @@ if (pid == -1) {
 
 if (pid == 0) {
         if(execvp("./lab902", NULL) < 0){
-                        printf("%s : Error, execvp 702.\n", MYNAME);            
+                        printf("%s : Error, execvp 902.\n", MYNAME);            
                         exit(-1);
         }
 }
 else {  
-        if((key = ftok(pathname, 0)) < 0){
-                printf("%s : Error of generate key\n", MYNAME);
-                exit(-1);
+        /* Получаем дескриптор общей памяти */
+        if ((shm_fd = shm_open("my_shm", O_CREAT | O_RDWR, 0666)) ==
+                                                                -1){
+          perror("cannot open");
+          return -1;
         }
-        if((md = shmget(key, LIST_SIZE*sizeof(char), FULL_PRIVEGIES|IPC_CREAT|IPC_EXCL)) < 0){
-                if(errno != EEXIST){
-                        printf("%s : Error of create shared memory\n", MYNAME);
-                        exit(-1);
-                }
-                else {
-                        if((md = shmget(key, LIST_SIZE*sizeof(char), 0)) < 0){
-                                printf("%s : Error of find shared memory\n", MYNAME);
-                                exit(-1);
-                        }
-                }
+       
+        /* Устанавливаем размер общей памяти равным SHM_SIZE */
+        if (ftruncate(shm_fd, SHM_SIZE*sizeof(char)) != 0){
+          perror("cannot set size");
+          return -1;
         }
-
-        if((array = (char *)shmat(md, NULL, 0)) == (char *)(-1)){
-                printf("%s : Error attach shared memory\n", MYNAME);
-                exit(-1);
+       
+        /*
+         * Подключаем общую память в адресное пространство. Флаг
+         * MAP_SHARED говорит, что это подключение общей памяти.
+         */
+        if ((array = mmap(0, SHM_SIZE, PROT_WRITE, MAP_SHARED,
+                     shm_fd, 0)) == MAP_FAILED){
+          perror("cannot mmap");
+          return -1;
+        }
+       
+        /* Блокируем общую память. Не забываем про этот шаг */
+        if (mlock(array, SHM_SIZE) != 0){
+          perror("cannot mlock");
+          return -1;
         }
 
         int i;
@@ -68,23 +74,12 @@ else {
 
         array[i+1]=EOF;
 
-        if (flag < 0){
-                printf ("%s : Can not read file\n", MYNAME);
-                exit (1);
-        }
-
-        
-        i=1;
-        while(i<100000000){
-                i++;
-        }
+        munmap(vaddr, SHM_SIZE);
+        close(shm_fd);
         printf("\nWriting of text this programm successfull\n");
         
-        if(shmdt(array) < 0){
-                printf("Can't detach shared memory\n");
-                exit(-1);
-        }
+        
 }
 return 0;
-<<<<<<< HEAD
+
 } 
