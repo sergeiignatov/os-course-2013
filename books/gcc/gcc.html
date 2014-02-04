@@ -1,0 +1,3304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xmlns:b="http://www.google.com/2005/gml/b" xmlns:data="http://www.google.com/2005/gml/data" xmlns:expr="http://www.google.com/2005/gml/expr"><head><meta content="76ba81176c3a85cc" name="yandex-verification">
+
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<script type="text/javascript">(function() { var a=window;function c(b){this.t={};this.tick=function(b,i,d){d=d!=void 0?d:(new Date).getTime();this.t[b]=[d,i]};this.tick("start",null,b)}var e=new c;a.jstiming={Timer:c,load:e};try{var g=null;a.chrome&&a.chrome.csi&&(g=Math.floor(a.chrome.csi().pageT));g==null&&a.gtbExternal&&(g=a.gtbExternal.pageT());g==null&&a.external&&(g=a.external.pageT);g&&(a.jstiming.pt=g)}catch(h){};a.tickAboveFold=function(b){var f=0;if(b.offsetParent){do f+=b.offsetTop;while(b=b.offsetParent)}b=f;b<=750&&a.jstiming.load.tick("aft")};var j=!1;function k(){j||(j=!0,a.jstiming.load.tick("firstScrollTime"))}a.addEventListener?a.addEventListener("scroll",k,!1):a.attachEvent("onscroll",k);
+ })();</script>
+<meta content="true" name="MSSmartTagsPreventParsing">
+<meta content="blogger" name="generator">
+<link href="http://pyviy.blogspot.com/favicon.ico" rel="icon" type="image/x-icon">
+<link href="http://pyviy.blogspot.com/2010/12/gcc.html" rel="canonical">
+<link rel="alternate" type="application/atom+xml" title="Незамысловатый блог - Atom" href="http://pyviy.blogspot.com/feeds/posts/default">
+<link rel="alternate" type="application/rss+xml" title="Незамысловатый блог - RSS" href="http://pyviy.blogspot.com/feeds/posts/default?alt=rss">
+<link rel="service.post" type="application/atom+xml" title="Незамысловатый блог - Atom" href="http://www.blogger.com/feeds/920988537392180762/posts/default">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.blogger.com/rsd.g?blogID=920988537392180762">
+<link rel="alternate" type="application/atom+xml" title="Незамысловатый блог - Atom" href="http://pyviy.blogspot.com/feeds/3969660084459841630/comments/default">
+<link rel="image_src" href="http://lh4.ggpht.com/_oMYflydwAbM/TPen30DdpbI/AAAAAAAAALs/KLuD6--mHi8/s72-c/lib.png">
+<!--[if IE]> <script> (function() { var html5 = ("abbr,article,aside,audio,canvas,datalist,details," + "figure,footer,header,hgroup,mark,menu,meter,nav,output," + "progress,section,time,video").split(','); for (var i = 0; i < html5.length; i++) { document.createElement(html5[i]); } try { document.execCommand('BackgroundImageCache', false, true); } catch(e) {} })(); </script> <![endif]-->
+<title>Незамысловатый блог: О GCC, компиляции и библиотеках</title>
+<link type="text/css" rel="stylesheet" href="gcc_files/3503329017-widget_css_bundle.css">
+ <link rel="stylesheet" type="text/css" href="gcc_files/authorization.css">
+<style type="text/css">#navbar-iframe { display:block }
+</style>
+
+<style id="page-skin-1" type="text/css"><!--
+/*
+-----------------------------------------------
+Blogger Template Style
+Name:     Son of Moto (Mean Green Blogging Machine variation)
+Designer: Jeffrey Zeldman
+URL:      www.zeldman.com
+Date:     23 Feb 2004
+Updated by: Blogger Team
+----------------------------------------------- */
+/* Variable definitions
+====================
+<Variable name="mainBgColor" description="Main Background Color"
+type="color" default="#ffffff">
+<Variable name="mainTextColor" description="Text Color"
+type="color" default="#555544">
+<Variable name="pageHeaderColor" description="Blog Title Color"
+type="color" default="#ffffee">
+<Variable name="blogDescriptionColor" description="Blog Description Color"
+type="color" default="#ffffee">
+<Variable name="linkColor" description="Link Color"
+type="color" default="#669922">
+<Variable name="hoverLinkColor" description="Link Hover Color"
+type="color" default="#88bb22">
+<Variable name="dateHeaderColor" description="Date Header Color"
+type="color" default="#555544">
+<Variable name="sidebarHeaderColor" description="Sidebar Title Color"
+type="color" default="#555544">
+<Variable name="sidebarTextColor" description="Sidebar Text Color"
+type="color" default="#555544">
+<Variable name="bodyFont" description="Text Font" type="font"
+default="normal normal 100% tahoma, 'Trebuchet MS', lucida, helvetica, sans-serif">
+<Variable name="startSide" description="Start side in blog language"
+type="automatic" default="left">
+<Variable name="endSide" description="End side in blog language"
+type="automatic" default="right">
+*/
+/* Primary layout */
+body {
+margin: 0;
+padding: 0;
+border: 0;
+text-align: center;
+color: #555544;
+background: #692 url(http://www.blogblog.com/moto_son/outerwrap.gif) top center repeat-y;
+font-size: small;
+}
+img {
+border: 0;
+display: block;
+}
+.clear {
+clear: both;
+}
+/* Wrapper */
+#outer-wrapper {
+margin: 0 auto;
+border: 0;
+width: 90%;
+text-align: left;
+background: #ffffff url(http://www.blogblog.com/moto_son/innerwrap.gif) top right repeat-y;
+font: normal normal 120% Trebuchet, Trebuchet MS, Arial, sans-serif;
+}
+/* Header */
+#header-wrapper	{
+background: #8b2 url(http://www.blogblog.com/moto_son/headbotborder.gif) bottom left repeat-x;
+margin: 0 auto;
+padding-top: 0;
+padding-right: 0;
+padding-bottom: 15px;
+padding-left: 0;
+border: 0;
+}
+#header h1 {
+text-align: left;
+font-size: 200%;
+color: #ffffee;
+margin: 0;
+padding-top: 15px;
+padding-right: 20px;
+padding-bottom: 0;
+padding-left: 20px;
+background-image: url(http://www.blogblog.com/moto_son/topper.gif);
+background-repeat: repeat-x;
+background-position: top left;
+}
+h1 a, h1 a:link, h1 a:visited {
+color: #ffffee;
+}
+#header .description {
+font-size: 110%;
+text-align: left;
+padding-top: 3px;
+padding-right: 20px;
+padding-bottom: 10px;
+padding-left: 23px;
+margin: 0;
+line-height:140%;
+color: #ffffee;
+}
+/* Inner layout */
+#content-wrapper {
+padding: 0 16px;
+}
+#main {
+width: 70%;
+float: left;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
+}
+#sidebar {
+width: 20%;
+float: right;
+color: #555544;
+word-wrap: break-word; /* fix for long text breaking sidebar float in IE */
+overflow: hidden;     /* fix for long non-text content breaking IE sidebar float */
+}
+/* Bottom layout */
+#footer	{
+clear: left;
+margin: 0;
+padding: 0 20px;
+border: 0;
+text-align: left;
+border-top: 1px solid #f9f9f9;
+}
+#footer .widget	{
+text-align: left;
+margin: 0;
+padding: 10px 0;
+background-color: transparent;
+}
+/* Default links 	*/
+a:link, a:visited {
+font-weight: bold;
+text-decoration: none;
+color: #669922;
+background: transparent;
+}
+a:hover {
+font-weight: bold;
+text-decoration: underline;
+color: #88bb22;
+background: transparent;
+}
+a:active {
+font-weight : bold;
+text-decoration : none;
+color: #88bb22;
+background: transparent;
+}
+/* Typography */
+.main p, .sidebar p, .post-body {
+line-height: 140%;
+margin-top: 5px;
+margin-bottom: 1em;
+}
+.post-body blockquote {
+line-height:1.3em;
+}
+h2, h3, h4, h5	{
+margin: 0;
+padding: 0;
+}
+h2 {
+font-size: 130%;
+}
+h2.date-header {
+color: #555544;
+}
+.post h3 {
+margin-top: 5px;
+font-size: 120%;
+}
+.post-footer {
+font-style: italic;
+}
+.sidebar h2 {
+color: #555544;
+}
+.sidebar .widget {
+margin-top: 12px;
+margin-right: 0;
+margin-bottom: 13px;
+margin-left: 0;
+padding: 0;
+}
+.main .widget {
+margin-top: 12px;
+margin-right: 0;
+margin-bottom: 0;
+margin-left: 0;
+}
+li  {
+line-height: 160%;
+}
+.sidebar ul {
+margin-left: 0;
+margin-top: 0;
+padding-left: 0;
+}
+.sidebar ul li {
+list-style: disc url(http://www.blogblog.com/moto_son/diamond.gif) inside;
+vertical-align: top;
+padding: 0;
+margin: 0;
+}
+.widget-content {
+margin-top: 0.5em;
+}
+/* Profile
+----------------------------------------------- */
+.profile-datablock {
+margin-top: 3px;
+margin-right: 0;
+margin-bottom: 5px;
+margin-left: 0;
+line-height: 140%;
+}
+.profile-textblock {
+margin-left: 0;
+}
+.profile-img {
+float: left;
+margin-top: 0;
+margin-right: 5px;
+margin-bottom: 5px;
+margin-left: 0;
+border:4px solid #8b2;
+}
+#comments  {
+border: 0;
+border-top: 1px dashed #eed;
+margin-top: 10px;
+margin-right: 0;
+margin-bottom: 0;
+margin-left: 0;
+padding: 0;
+}
+#comments h4	{
+margin-top: 10px;
+font-weight: normal;
+font-style: italic;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+#comments dl dt 	{
+font-weight: bold;
+font-style: italic;
+margin-top: 35px;
+padding-top: 1px;
+padding-right: 0;
+padding-bottom: 0;
+padding-left: 18px;
+background: transparent url(http://www.blogblog.com/moto_son/commentbug.gif) top left no-repeat;
+}
+#comments dl dd	{
+padding: 0;
+margin: 0;
+}
+.deleted-comment {
+font-style:italic;
+color:gray;
+}
+.feed-links {
+clear: both;
+line-height: 2.5em;
+}
+#blog-pager-newer-link {
+float: left;
+}
+#blog-pager-older-link {
+float: right;
+}
+#blog-pager {
+text-align: center;
+}
+/** Page structure tweaks for layout editor wireframe */
+body#layout #outer-wrapper {
+padding-top: 0;
+}
+body#layout #header,
+body#layout #content-wrapper,
+body#layout #footer {
+padding: 0;
+}
+
+--></style>
+<style>
+
+span.fullpost {display:inline;}
+
+</style>
+<style type="text/css">
+
+p { text-indent : 30px; text-align : justify; }
+
+code { white-space : pre; font-family : courier new; }
+
+
+
+.pre { white-space : pre; font-family : courier new;}
+
+
+
+.item { color : blue; }
+
+.gitem { color : green; }
+
+
+
+.code { white-space : pre; font-family : courier new; color : #3333ff; }
+
+
+
+.console { white-space : pre; font-family : courier new; color : #990000; }
+
+
+
+.codeblock { font-family : courier new; padding : 20px; background-color: #f0eee6; border : 2px solid #c1b496; overflow : auto;}
+
+.noteblock { font-size : smaller; padding : 20px; background-color: #bfbfbf; border : 2px solid #5b5b5b; overflow : auto;}
+
+
+
+table.my { background-color: #000000; border-spacing : 1px; width : 80%; }
+
+th.my { text-align : center; padding : 5px; background-color: #c1b496; }
+
+td.my { text-align : left; padding : 5px 5px 5px 40px; background-color: #f0eee6;}
+
+</style>
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('headEnd');
+</script></head>
+<body>
+<div class="navbar section" id="navbar"><div class="widget Navbar" id="Navbar1"><script type="text/javascript">
+    function setAttributeOnload(object, attribute, val) {
+      if(window.addEventListener) {
+        window.addEventListener("load",
+          function(){ object[attribute] = val; }, false);
+      } else {
+        window.attachEvent('onload', function(){ object[attribute] = val; });
+      }
+    }
+  </script>
+<iframe src="gcc_files/navbar.htm" marginwidth="0" marginheight="0" id="navbar-iframe" allowtransparency="true" title="Blogger Navigation and Search" frameborder="0" height="30px" scrolling="no" width="100%"></iframe>
+<div></div></div></div>
+<div id="outer-wrapper"><div id="wrap2">
+<!-- skip links for text browsers -->
+<span id="skiplinks" style="display:none;">
+<a href="#main">skip to main </a> |
+      <a href="#sidebar">skip to sidebar</a>
+</span>
+<div id="header-wrapper">
+<div class="header section" id="header"><div class="widget Header" id="Header1">
+<div id="header-inner">
+<div class="titlewrapper">
+<h1 class="title">
+<a href="http://pyviy.blogspot.com/">Незамысловатый блог</a>
+</h1>
+</div>
+<div class="descriptionwrapper">
+<p class="description"><span>
+</span></p>
+</div>
+</div>
+</div></div>
+</div>
+<div id="content-wrapper">
+<div id="crosscol-wrapper" style="text-align:center">
+<div class="crosscol section" id="crosscol"></div>
+</div>
+<div id="main-wrapper">
+<div class="main section" id="main"><div class="widget Blog" id="Blog1">
+<div class="blog-posts hfeed">
+<!-- google_ad_section_start(name=default) -->
+
+          <div class="date-outer">
+        
+<h2 class="date-header"><span>03.12.10</span></h2>
+
+          <div class="date-posts">
+        
+<div class="post-outer">
+<div class="post hentry uncustomized-post-template">
+<a name="3969660084459841630"></a>
+<h3 class="post-title entry-title">
+<a href="http://pyviy.blogspot.com/2010/12/gcc.html">О GCC, компиляции и библиотеках</a>
+</h3>
+<div class="post-header-line-1"></div>
+<div class="post-body entry-content">
+﻿<p><b>GCC</b> - <b>GNU Compiler Collection</b> - набор компиляторов и сопутствующих утилит, разработанный в рамках движения <b>GNU</b>.
+ GCC один из старейших Open Source проектов, первый релиз состоялся в 
+1985 году, автор сам Ричард Столлман. В исходном варианте поддерживал 
+только язык <b>C</b> и аббревиатура GCC расшифровывалась как <b>GNU C Compiler</b>. Постепенно набор доступных языков расширялся, были добавлены компиляторы <b>Fortran</b>, <b>C++</b>, <b>Ada</b>.
+ С уверенностью можно сказать, что современный мир Open Source обязан 
+своим рождением GCC (по крайней мере без GCC он был бы другим). В 
+настоящее время проект находиться под крылом <b>Free Software Foundation</b>.
+ GCC выпускается под лицензией GPLv3 и является стандартным компилятором
+ для большинства свободных UNIX-подобных операционных систем. В базовый 
+набор входят компиляторы языков: <b>C</b>, <b>C++</b>, <b>Objective-C</b>, <b>Java</b>, <b>Fortran</b>, <b>Ada</b>. GCC поддерживает все основные процессорные архитектуры. Официальный сайт проекта <a href="http://gcc.gnu.org/">gcc.gnu.org</a></p>
+
+
+
+<h3>Основы</h3>
+
+
+
+<p>GCC входит в состав любого дистрибутива <b>Linux</b> и, как правило, 
+устанавливается по умолчанию. Интерфейс GCC, это стандартный интерфейс 
+компилятора на UNIX платформе, уходящий своими корнями в конец 60-х, 
+начало 70-х годов прошлого века - интерфейс командной строки. Не стоит 
+пугаться, за прошедшее время механизм взаимодействия с пользователем был
+ отточен до возможного в данном случае совершенства, и работать с GCC 
+(при наличии нескольких дополнительных утилит и путного текстового 
+редактора) проще, чем с любой из современных визуальных IDE. Авторы 
+набора постарались максимально автоматизировать процесс компиляции и 
+сборки приложений. Пользователь вызывает управляющую программу <b>gcc</b>,
+ она интерпретирует переданные аргументы командной строки (опции и имена
+ файлов) и для каждого входного файла, в соответствии с использованным 
+языком программирования, запускает свой компилятор, затем, если это 
+необходимо, <b>gcc</b> автоматически вызывает ассемблер и линковщик (компоновщик).</p>
+
+
+
+<span class="fullpost">
+
+
+
+<div class="noteblock">
+
+
+
+<p>Любопытно, компиляторы одни из немногих приложений UNIX для которых 
+не безразлично расширение файлов. По расширению GCC определяет что за 
+файл перед ним и, что с ним нужно (можно) сделать. Файлы исходного кода 
+на языке <b>C</b> должны иметь расширение <span class="item">.c</span>, на языке <b>C++</b>, как вариант, <span class="item">.cpp</span>, заголовочные файлы на языке <b>C</b> <span class="item">.h</span>, объектные файлы <span class="item">.o</span> и так далее. Если использовать неправильное расширение, <b>gcc</b> будет работать не корректно (если вообще согласиться, что-либо делать).</p>
+
+
+
+</div>
+
+
+
+<p>Перейдём к практике. Напишем, откомпилируем и исполним какую-нибудь 
+незамысловатую программу. Не будем оригинальничать, в качестве исходного
+ файла примера программы на языке <b>C</b> сотворим файл с вот таким содержимым:</p>
+
+
+
+<div class="codeblock">
+
+<code><font color="#0000ff">/*</font><font color="#0000ff"> hello.c </font><font color="#0000ff">*/</font></code><br>
+
+<br>
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">&lt;stdio.h&gt;</font></code><br>
+
+<br>
+
+<code>main(<font color="#2e8b57"><b>void</b></font>)</code><br>
+
+<code>{</code><br>
+
+<br>
+
+<code>        printf(<font color="#ff00ff">"Hello World</font><font color="#6a5acd">\n</font><font color="#ff00ff">"</font>);</code><br>
+
+<br>
+
+<code>        <font color="#a52a2a"><b>return</b></font> <font color="#ff00ff">0</font>;</code><br>
+
+<br>
+
+<code>}</code><br>
+
+</div>
+
+
+
+<p>Теперь в каталоге c <span class="item">hello.c</span> отдадим команду:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc hello.c</span><br>
+
+</div>
+
+
+
+<p>Через несколько долей секунды в каталоге появиться файл <span class="item">a.out</span>:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>a.out  hello.c</b></span><br>
+
+</div>
+
+
+
+<p>Это и есть готовый исполняемый файл нашей программы. По умолчанию <b>gcc</b> присваивает выходному исполняемому файлу имя <span class="item">a.out</span> (когда-то очень давно это имя означало <b>assembler output</b>).</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">file a.out</span><br>
+
+<span class="console"><b>a.out: ELF 64-bit LSB executable, x86-64, 
+version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 
+2.6.15, not stripped</b></span><br>
+
+</div>
+
+
+
+<p>Запустим получившийся программный продукт:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">./a.out</span><br>
+
+<span class="console"><b>Hello World</b></span><br>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="noteblock">
+
+
+
+<p>Почему в команде запуска на исполнение файла из текущего каталога 
+необходимо явно указывать путь к файлу? Если путь к исполняемому файлу 
+не указан явно, оболочка, интерпретируя команды, ищет файл в каталогах, 
+список которых задан системной переменной <span class="item">PATH</span>.
+
+<br><br>
+
+<span class="console">$</span> <span class="code">echo $PATH</span>
+
+<br>
+
+<span class="console"><b>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</b></span>
+
+</p>
+
+
+
+<p>Каталоги в списке разделены символом двоеточия. При поиске файлов, 
+оболочка просматривает каталоги в том порядке, в котором они перечислены
+ в списке. По умолчанию, из соображений безопасности, текущий каталог <span class="item">.</span> в список не внесен, соответственно, оболочка исполняемые файлы искать в нем не будет.</p>
+
+
+
+<p>Почему не рекомендуется вносить <span class="item">.</span> в <span class="item">PATH</span>?
+ Считается, что в реальной многопользовательской системе всегда найдется
+ какой-нибудь нехороший человек, который разместит в общедоступном 
+каталоге вредоносную программу с именем исполняемого файла, совпадающим с
+ именем какой-нибудь команды, часто вызываемой местным администратором с
+ правами суперпользователя... Заговор удастся если <span class="item">.</span> стоит в начале списка каталогов.</p>
+
+
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="noteblock">
+
+
+
+<p>Утилита <b>file</b> выводит информацию о типе (с точки зрения 
+системы) переданного в коммандной строке файла, для некоторых типов 
+файлов выводит всякие дополнительные сведения касающиеся содержимого 
+файла.
+
+<br><br>
+
+<span class="console">$</span> <span class="code">file hello.c</span><br>
+
+<span class="console"><b>hello.c: ASCII C program text</b></span><br>
+
+<span class="console">$</span> <span class="code">file annotation.doc</span><br>
+
+<span class="console" style="white-space : normal"><b>annotation.doc: 
+CDF V2 Document, Little Endian, Os: Windows, Version 5.1, Code page: 
+1251, Author: MIH, Template: Normal.dot, Last Saved By: MIH, Revision 
+Number: 83, Name of Creating Application: Microsoft Office Word, Total 
+Editing Time: 09:37:00, Last Printed: Thu Jan 22 07:31:00 2009, Create 
+Time/Date: Mon Jan 12 07:36:00 2009, Last Saved Time/Date: Thu Jan 22 
+07:34:00 2009, Number of Pages: 1, Number of Words: 3094, Number of 
+Characters: 17637, Security: 0</b></span></p>
+
+
+
+</div>
+
+
+
+<p>Вот собственно и всё, что требуется от пользователя для успешного применения <b>gcc</b> :)</p>
+
+
+
+<p>Имя выходного исполняемого файла (как впрочем и любого другого файла формируемого <b>gcc</b>) можно изменить с помощью <b>опции <span class="item">-o</span></b>:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -o hello hello.c</span><br>
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello  hello.c</b></span><br>
+
+<span class="console">$</span> <span class="code">./hello</span><br>
+
+<span class="console"><b>Hello World</b></span><br>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="noteblock">
+
+
+
+<p>В нашем примере функция <span class="item">main()</span> возвращает казалось бы ни кому не нужное значение <span class="item">0</span>.
+ В UNIX-подобных системах, по завершении работы программы, принято 
+возвращать в командную оболочку целое число - в случае успешного 
+завершения ноль, любое другое в противном случае. Интерпретатор оболочки
+ автоматически присвоит полученное значение переменной среды с именем <span class="item">?</span>. Просмотреть её содержимое можно с помощью команды <span class="item">echo $?</span>:
+
+<br>
+
+<br>
+
+<span class="console">$</span> <span class="code">./hello</span><br>
+
+<span class="console"><b>Hello World</b></span><br>
+
+<span class="console">$</span> <span class="code">echo $?</span><br>
+
+<span class="console"><b>0</b></span>
+
+
+
+</p></div>
+
+
+
+<p>Выше было сказано, что <b>gcc</b> это управляющая программа, 
+предназначенная для автоматизации процесса компиляции. Посмотрим что же 
+на самом деле происходит в результате исполнения команды <span class="item">gcc hello.c</span>.</p>
+
+
+
+<p>Процесс компиляции можно разбить на 4 основных этапа: обработка 
+препроцессором, собственно компиляция, ассемблирование, линковка 
+(связывание).</p>
+
+
+
+<p>Опции <b>gcc</b> позволяют прервать процесс на любом из этих этапов.</p>
+
+
+
+<p>Препроцессор осуществляет подготовку исходного файла к компиляции -  
+вырезает комментарии, добавляет содержимое заголовочных файлов 
+(директива препроцессора <span class="item">#include</span>), реализует раскрытие макросов (символических констант, директива препроцессора <span class="item">#define</span>).</p>
+
+
+
+<p>Воспользовавшись <b>опцией <span class="item">-E</span></b> дальнейшие действия <b>gcc</b> можно прервать и просмотреть содержимое файла, обработанного препроцессором.</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -E -o hello.i hello.c</span><br>
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello.c  hello.i</b></span><br>
+
+<span class="console">$</span> <span class="code">less hello.i</span><br>
+
+<span class="console"><b>. . .</b></span><br>
+
+<span class="console"><b># 1 "/usr/include/stdio.h" 1 3 4</b></span><br>
+
+<span class="console"><b># 28 "/usr/include/stdio.h" 3 4</b></span><br>
+
+<span class="console"><b># 1 "/usr/include/features.h" 1 3 4</b></span><br>
+
+<span class="console"><b>. . .</b></span><br>
+
+<span class="console"><b>typedef unsigned char __u_char;</b></span><br>
+
+<span class="console"><b>typedef unsigned short int __u_short;</b></span><br>
+
+<span class="console"><b>typedef unsigned int __u_int;</b></span><br>
+
+<span class="console"><b>. . .</b></span><br>
+
+<span class="console"><b>extern int printf (__const char *__restrict __format, ...);</b></span><br>
+
+<span class="console"><b>. . .</b></span><br>
+
+<span class="console"><b># 4 "hello.c" 2</b></span><br>
+
+<span class="console"><b> </b></span><br>
+
+<span class="console"><b>main (void)</b></span><br>
+
+<span class="console"><b>{</b></span><br>
+
+<span class="console"><b> </b></span><br>
+
+<span class="console"><b> printf ("Hello World\n");</b></span><br>
+
+<span class="console"><b> </b></span><br>
+
+<span class="console"><b> return 0;</b></span><br>
+
+<span class="console"><b> </b></span><br>
+
+<span class="console"><b>}</b></span><br>
+
+</div>
+
+
+
+<p>После обработки препроцессором исходный текст нашей программы разбух и
+ приобрел не удобочитаемый вид. Код, который мы когда-то собственноручно
+ набили, свелся к нескольким строчкам в самом конце файла. Причина - 
+подключение заголовочного файла стандартной библиотеки <b>C</b>. Заголовочный файл <span class="item">stdio.h</span> сам по себе содержит много всего разного да ещё требует включения других заголовочных файлов.</p>
+
+
+
+<p>Обратите внимание на расширение файла <span class="item">hello.i</span>. По соглашениям <b>gcc</b> расширение <span class="item">.i</span> соответствует файлам с исходным кодом на языке <b>C</b> не требующим обработки препроцессором. Такие файлы компилируются минуя препроцессор:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -o hello hello.i</span><br>
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello  hello.c  hello.i</b></span><br>
+
+<span class="console">$</span> <span class="code">./hello</span><br>
+
+<span class="console"><b>Hello World</b></span><br>
+
+</div>
+
+
+
+<p>После препроцессинга наступает очередь компиляции. Компилятор 
+преобразует исходный текст программы на языке высокого уровня в код на 
+языке ассемблера.</p>
+
+
+
+<div class="noteblock">
+
+
+
+<p>Значение слова компиляция размыто. Википедисты, например, считают, 
+ссылаясь на международные стандарты, что компиляция это "преобразование 
+программой-компилятором  исходного текста какой-либо программы, 
+написанного на языке программирования высокого уровня, в язык, близкий к
+ машинному, или в объектный код." В принципе это определение нам 
+подходит, язык ассемблера действительно ближе к машинному, чем <b>C</b>.
+ Но в обыденной жизни под компиляцией чаще всего понимают просто любую 
+операцию, преобразующую исходный код программы на каком-либо языке 
+программирования в исполняемый код. То есть процесс, включающий все 
+четыре означенных выше, этапа также может быть назван компиляцией. 
+Подобная неоднозначность присутствует и в настоящем тексте. С другой 
+стороны, операцию преобразования исходного текста программы в код на 
+языке ассемблера можно обозначить и словом трансляция - "преобразование 
+программы, представленной на одном из языков программирования, в 
+программу на другом языке и, в определённом смысле, равносильную 
+первой".</p>
+
+
+
+</div>
+
+
+
+<p>Остановить процесс создания исполняемого файла по завершении компиляции позволяет <b>опция <span class="item">-S</span></b>:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -S hello.c</span><br>
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello.c  hello.s</b></span><br>
+
+<span class="console">$</span> <span class="code">file hello.s</span><br>
+
+<span class="console"><b>hello.s: ASCII assembler program text</b></span><br>
+
+<span class="console">$</span> <span class="code">less hello.s</span><br>
+
+<span class="console"><b>        .file   "hello.c"</b></span><br>
+
+<span class="console"><b>        .section        .rodata</b></span><br>
+
+<span class="console"><b>.LC0:</b></span><br>
+
+<span class="console"><b>        .string "Hello World"</b></span><br>
+
+<span class="console"><b>        .text</b></span><br>
+
+<span class="console"><b>.globl main</b></span><br>
+
+<span class="console"><b>        .type   main, @function</b></span><br>
+
+<span class="console"><b>main:</b></span><br>
+
+<span class="console"><b>        pushl   %ebp</b></span><br>
+
+<span class="console"><b>        movl    %esp, %ebp</b></span><br>
+
+<span class="console"><b>        andl    $-16, %esp</b></span><br>
+
+<span class="console"><b>        subl    $16, %esp</b></span><br>
+
+<span class="console"><b>        movl    $.LC0, (%esp)</b></span><br>
+
+<span class="console"><b>        call    puts</b></span><br>
+
+<span class="console"><b>        movl    $0, %eax</b></span><br>
+
+<span class="console"><b>        leave</b></span><br>
+
+<span class="console"><b>        ret</b></span><br>
+
+<span class="console"><b>        .size   main, .-main</b></span><br>
+
+<span class="console"><b>        .ident  "GCC: (Ubuntu 4.4.3-4ubuntu5) 4.4.3"</b></span><br>
+
+<span class="console"><b>        .section        .note.GNU-stack,"",@progbits</b></span><br>
+
+</div>
+
+
+
+<p>В каталоге появился файл <span class="item">hello.s</span>, содержащий реализацию программы на языке ассемблера. Обратите внимание, задавать имя выходного файла с помощью <b>опции <span class="item">-o</span></b> в данном случае не потребовалось, <b>gcc</b> автоматически его сгенерировал, заменив в имени исходного файла расширение <span class="item">.c</span> на <span class="item">.s</span>. Для большинства основных операций <b>gcc</b> имя выходного файла формируется путем подобной замены. Расширение <span class="item">.s</span> стандартное для файлов с исходным кодом на языке ассемблера.</p>
+
+
+
+<p>Получить исполняемый код разумеется можно и из файла <span class="item">hello.s</span>:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -o hello hello.s</span><br>
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello  hello.c  hello.s</b></span><br>
+
+<span class="console">$</span> <span class="code">./hello</span><br>
+
+<span class="console"><b>Hello World</b></span><br>
+
+</div>
+
+
+
+<p>Следующий этап операция ассмеблирования - трансляция кода на языке 
+ассемблера в машинный код. Результат операции - объектный файл. 
+Объектный файл содержит блоки готового к исполнению машинного кода, 
+блоки данных, а также список определенных в файле функций и внешних 
+переменных (<b><i>таблицу символов</i></b>), но при этом в нем не заданы
+ абсолютные адреса ссылок на функции и данные. Объектный файл не может 
+быть запущен на исполнение непосредственно, но в дальнейшем (на этапе 
+линковки) может быть объединен с другими объектными файлами (при этом, в
+ соответствии с таблицами символов, будут вычислены и заполнены адреса 
+существующих между файлами перекрестных ссылок). Опция <b>gcc</b> <span class="item">-c</span>, останавливает процесс по завершении этапа ассемблирования:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -c hello.c</span><br>
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello.c  hello.o</b></span><br>
+
+<span class="console">$</span> <span class="code">file hello.o</span><br>
+
+<span class="console"><b>hello.o: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), not stripped</b></span><br>
+
+</div>
+
+
+
+<p>Для объектных файлов принято стандартное расширение <span class="item">.o</span>.</p>
+
+
+
+<p>Если полученный объектный файл <span class="item">hello.o</span> 
+передать линковщику, последний вычислит адреса ссылок, добавит код 
+запуска и завершения программы, код вызова библиотечных функций и в 
+результате мы будем обладать готовым исполняемым файлом программы.</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -o hello hello.o</span><br>
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello  hello.c  hello.o</b></span><br>
+
+<span class="console">$</span> <span class="code">./hello</span><br>
+
+<span class="console"><b>Hello World</b></span><br>
+
+</div>
+
+
+
+<p>То, что мы сейчас проделали (вернее <b>gcc</b> проделал за нас) и есть содержание последнего этапа - линковки (связывания, компоновки).</p>
+
+
+
+<p>Ну вот пожалуй о компиляции и все. Теперь коснемся некоторых, на мой взгляд важных, опций <b>gcc</b>.</p>
+
+
+
+<p><b>Опция <span class="item">-I</span><span class="gitem">путь/к/каталогу/с/заголовочными/файлами</span></b> - добавляет указанный каталог к списку путей поиска заголовочных файлов. Каталог, добавленный опцией <b><span class="item">-I</span></b> просматривается первым, затем поиск продолжается в стандартных системных каталогах. Если опций <b><span class="item">-I</span></b> несколько, заданные ими каталоги просматриваются слева на право, по мере появления опций.</p> 
+
+
+
+<p><b>Опция <span class="item">-Wall</span></b> - выводит 
+предупреждения, вызванные потенциальными ошибками в коде, не 
+препятствующими компиляции программы, но способными привести, по мнению 
+компилятора, к тем или иным проблемам при её исполнении. Важная и 
+полезная опция, разработчики <b>gcc</b> рекомендуют пользоваться ей всегда. Например масса предупреждений будет выдана при попытке компиляции вот такого файла:</p>
+
+
+
+<div class="codeblock">
+
+<code><font color="#a52a2a"> 1 </font><font color="#0000ff">/*</font><font color="#0000ff"> remark.c </font><font color="#0000ff">*/</font></code><br>
+
+<code><font color="#a52a2a"> 2 </font></code><br>
+
+<code><font color="#a52a2a"> 3 </font><font color="#2e8b57"><b>static</b></font> <font color="#2e8b57"><b>int</b></font> k = <font color="#ff00ff">0</font>;</code><br>
+
+<code><font color="#a52a2a"> 4 </font><font color="#2e8b57"><b>static</b></font> <font color="#2e8b57"><b>int</b></font> l(<font color="#2e8b57"><b>int</b></font> a);</code><br>
+
+<code><font color="#a52a2a"> 5 </font></code><br>
+
+<code><font color="#a52a2a"> 6 </font>main()</code><br>
+
+<code><font color="#a52a2a"> 7 </font>{</code><br>
+
+<code><font color="#a52a2a"> 8 </font></code><br>
+
+<code><font color="#a52a2a"> 9 </font>        <font color="#2e8b57"><b>int</b></font> a;</code><br>
+
+<code><font color="#a52a2a">10 </font></code><br>
+
+<code><font color="#a52a2a">11 </font>        <font color="#2e8b57"><b>int</b></font> b, c;</code><br>
+
+<code><font color="#a52a2a">12 </font></code><br>
+
+<code><font color="#a52a2a">13 </font>        b + <font color="#ff00ff">1</font>;</code><br>
+
+<code><font color="#a52a2a">14 </font></code><br>
+
+<code><font color="#a52a2a">15 </font>        b = c;</code><br>
+
+<code><font color="#a52a2a">16 </font></code><br>
+
+<code><font color="#a52a2a">17 </font>        <font color="#2e8b57"><b>int</b></font> *p;</code><br>
+
+<code><font color="#a52a2a">18 </font></code><br>
+
+<code><font color="#a52a2a">19 </font>        b = *p;</code><br>
+
+<code><font color="#a52a2a">20 </font></code><br>
+
+<code><font color="#a52a2a">21 </font>}</code><br>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -o remark remark.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -Wall -o remark remark.c</span><br>
+
+<span class="console"><b>remark.c:7: warning: return type defaults to ‘int’</b></span><br>
+
+<span class="console"><b>remark.c: In function ‘main’:</b></span><br>
+
+<span class="console"><b>remark.c:13: warning: statement with no effect</b></span><br>
+
+<span class="console"><b>remark.c:9: warning: unused variable ‘a’</b></span><br>
+
+<span class="console"><b>remark.c:21: warning: control reaches end of non-void function</b></span><br>
+
+<span class="console"><b>remark.c: At top level:</b></span><br>
+
+<span class="console"><b>remark.c:3: warning: ‘k’ defined but not used</b></span><br>
+
+<span class="console"><b>remark.c:4: warning: ‘l’ declared ‘static’ but never defined</b></span><br>
+
+<span class="console"><b>remark.c: In function ‘main’:</b></span><br>
+
+<span class="console"><b>remark.c:15: warning: ‘c’ is used uninitialized in this function</b></span><br>
+
+<span class="console"><b>remark.c:19: warning: ‘p’ is used uninitialized in this function</b></span><br>
+
+</div>
+
+
+
+<p><b>Опция <span class="item">-Werror</span></b> - превращает все 
+предупреждения в ошибки. В случае появления предупреждения прерывает 
+процесс компиляции. Используется совместно с <b>опцией <span class="item">-Wall</span></b>.</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -Werror -o remark remark.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -Werror -Wall -o remark remark.c</span><br>
+
+<span class="console"><b>cc1: warnings being treated as errors</b></span><br>
+
+<span class="console"><b>remark.c:7: error: return type defaults to ‘int’</b></span><br>
+
+<span class="console"><b>remark.c: In function ‘main’:</b></span><br>
+
+<span class="console"><b>remark.c:13: error: statement with no effect</b></span><br>
+
+<span class="console"><b>remark.c:9: error: unused variable ‘a’</b></span><br>
+
+</div>
+
+
+
+<p><b>Опция <span class="item">-g</span></b> - помещает в объектный или исполняемый файл информацию необходимую для работы отладчика <b>gdb</b>. При сборке какого-либо проекта с целью последующей отладки, <b>опцию <span class="item">-g</span></b> необходимо включать как на этапе компиляции так и на этапе компоновки.</p>
+
+
+
+<p><b>Опции <span class="item">-O1</span>, <span class="item">-O2</span>, <span class="item">-O3</span></b>
+ - задают уровень оптимизации кода генерируемого компилятором. С 
+увеличением номера, степень оптимизации возрастает. Действие опций можно
+ увидеть вот на таком примере.</p>
+
+
+
+<p>Исходный файл:</p>
+
+
+
+<div class="codeblock">
+
+<code><font color="#0000ff">/*</font><font color="#0000ff"> circle.c </font><font color="#0000ff">*/</font></code><br>
+
+<br>
+
+<code>main(<font color="#2e8b57"><b>void</b></font>)</code><br>
+
+<code>{</code><br>
+
+<br>
+
+<code>        <font color="#2e8b57"><b>int</b></font> i;</code><br>
+
+<br>
+
+<code>        <font color="#a52a2a"><b>for</b></font>(i = <font color="#ff00ff">0</font>; i &lt; <font color="#ff00ff">10</font>; ++i)</code><br>
+
+<code>                ;</code><br>
+
+<br>        
+
+<code>        <font color="#a52a2a"><b>return</b></font> i;</code><br>
+
+<br>
+
+<code>}</code><br>
+
+</div>
+
+
+
+<p>Компиляция с уровнем оптимизации по умолчанию:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -S circle.c</span><br>
+
+<span class="console">$</span> <span class="code">less circle.s</span><br>
+
+<span class="console"><b>        .file   "circle.c"</b></span><br>
+
+<span class="console"><b>        .text</b></span><br>
+
+<span class="console"><b>.globl main</b></span><br>
+
+<span class="console"><b>        .type   main, @function</b></span><br>
+
+<span class="console"><b>main:</b></span><br>
+
+<span class="console"><b>        pushl   %ebp</b></span><br>
+
+<span class="console"><b>        movl    %esp, %ebp</b></span><br>
+
+<span class="console"><b>        subl    $16, %esp</b></span><br>
+
+<span class="console"><b>        movl    $0, -4(%ebp)</b></span><br>
+
+<span class="console"><b>        jmp     .L2</b></span><br>
+
+<span class="console"><b>.L3:</b></span><br>
+
+<span class="console"><b>        addl    $1, -4(%ebp)</b></span><br>
+
+<span class="console"><b>.L2:</b></span><br>
+
+<span class="console"><b>        cmpl    $9, -4(%ebp)</b></span><br>
+
+<span class="console"><b>        jle     .L3</b></span><br>
+
+<span class="console"><b>        movl    -4(%ebp), %eax</b></span><br>
+
+<span class="console"><b>        leave</b></span><br>
+
+<span class="console"><b>        ret</b></span><br>
+
+<span class="console"><b>        .size   main, .-main</b></span><br>
+
+<span class="console"><b>        .ident  "GCC: (Ubuntu 4.4.3-4ubuntu5) 4.4.3"</b></span><br>
+
+<span class="console"><b>        .section        .note.GNU-stack,"",@progbits</b></span><br>
+
+</div>
+
+
+
+<p>Компиляция с максимальным уровнем оптимизации:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -S -O3 circle.c</span><br>
+
+<span class="console">$</span> <span class="code">less circle.s</span><br>
+
+<span class="console"><b>        .file   "circle.c"</b></span><br>
+
+<span class="console"><b>        .text</b></span><br>
+
+<span class="console"><b>        .p2align 4,,15</b></span><br>
+
+<span class="console"><b>.globl main</b></span><br>
+
+<span class="console"><b>        .type   main, @function</b></span><br>
+
+<span class="console"><b>main:</b></span><br>
+
+<span class="console"><b>        pushl   %ebp</b></span><br>
+
+<span class="console"><b>        movl    $10, %eax</b></span><br>
+
+<span class="console"><b>        movl    %esp, %ebp</b></span><br>
+
+<span class="console"><b>        popl    %ebp</b></span><br>
+
+<span class="console"><b>        ret</b></span><br>
+
+<span class="console"><b>        .size   main, .-main</b></span><br>
+
+<span class="console"><b>        .ident  "GCC: (Ubuntu 4.4.3-4ubuntu5) 4.4.3"</b></span><br>
+
+<span class="console"><b>        .section        .note.GNU-stack,"",@progbits</b></span><br>
+
+</div>
+
+
+
+<p>Во втором случае в полученном коде даже нет намёка на какой-либо цикл. Действительно, значение <span class="code">i</span>, можно вычислить ещё на этапе компиляции, что и было сделано.</p>
+
+
+
+<p>Увы, для реальных проектов разница в производительности при различных уровнях оптимизации практически не заметна...</p>
+
+
+
+<p><b>Опция <span class="item">-O0</span></b> - отменяет какую-либо 
+оптимизацию кода. Опция необходима на этапе отладки приложения. Как было
+ показано выше, оптимизация может привести к изменению структуры 
+программы до неузнаваемости, связь между исполняемым и исходным кодом не
+ будет явной, соответственно, пошаговая отладка программы будет не 
+возможна. При включении опции <b><span class="item">-g</span></b>, рекомендуется включать и <b><span class="item">-O0</span></b>.</p>
+
+
+
+<p><b>Опция <span class="item">-Os</span></b> - задает оптимизацию не по
+ эффективности кода, а по размеру получаемого файла. Производительность 
+программы при этом должна быть сопоставима с производительностью кода 
+полученного при компиляции с уровнем оптимизации заданным по умолчанию.</p>
+
+
+
+<p><b>Опция <span class="item">-march=</span><span class="gitem">architecture</span></b> - задает целевую архитектуру процессора. Список поддерживаемых архитектур обширен, например, для процессоров семейства <b>Intel/AMD</b> можно задать <b><span class="gitem">i386</span></b>, <b><span class="gitem">pentium</span></b>, <b><span class="gitem">prescott</span></b>, <b><span class="gitem">opteron-sse3</span></b>
+ и т.д. Пользователи бинарных дистрибутивов должны иметь в виду, что для
+ корректной работы программ с указанной опцией желательно, что бы и все 
+подключаемые библиотеки были откомпилированы с той же опцией.</p>
+
+
+
+<p>Об опциях передаваемых линковщику будет сказано ниже.</p>
+
+
+
+<p>Собственно о компиляции все. Далее поговорим о раздельной компиляции и создании библиотек.</p>
+
+
+
+<p>Небольшое дополнение:</p>
+
+
+
+<div class="noteblock">
+
+
+
+<p>Выше было сказано, что <b>gcc</b> определяет тип (язык 
+программирования) переданных файлов по их расширению и, в соответствии с
+ угаданным типом (языком), производит действия над ними. Пользователь 
+обязан следить за расширениями создаваемых файлов, выбирая их так, как 
+того требуют соглашения <b>gcc</b>. В действительности <b>gcc</b> можно подсовывать файлы с произвольными именами. <b>Опция gcc <span class="item">-x</span></b>
+ позволяет явно указать язык программирования компилируемых файлов. 
+Действие опции распространяется на все последующие перечисленные в 
+команде файлы (вплоть до появления следующей опции <b><span class="item">-x</span></b>). Возможные аргументы опции:</p>
+
+
+
+<p class="pre"><b><span class="gitem">c                 c-header                 c-cpp-output</span></b></p>
+
+<p class="pre"><b><span class="gitem">c++               c++-header               c++-cpp-output</span></b></p>
+
+<p class="pre"><b><span class="gitem">objective-c       objective-c-header       objective-c-cpp-output</span></b></p>
+
+<p class="pre"><b><span class="gitem">objective-c++     objective-c++-header     objective-c++-cpp-output</span></b></p>
+
+<p class="pre"><b><span class="gitem">assembler         assembler-with-cpp</span></b></p>
+
+<p class="pre"><b><span class="gitem">ada</span></b></p>
+
+<p class="pre"><b><span class="gitem">f77               f77-cpp-input</span></b></p>
+
+<p class="pre"><b><span class="gitem">f95               f95-cpp-input</span></b></p>
+
+<p class="pre"><b><span class="gitem">java</span></b></p>
+
+
+
+<p>Назначение аргументов должно быть понятно из их написания (здесь <b><span class="gitem">cpp</span></b> не имеет ни какого отношения к <b>C++</b>, это файл исходного кода предварительно обработанный препроцессором). Проверим:</p>
+
+
+
+<span class="console">$</span> <span class="code">mv hello.c hello.txt</span><br>
+
+<span class="console">$</span> <span class="code">gcc -Wall -x c -o hello hello.txt</span><br>
+
+<span class="console">$</span> <span class="code">./hello</span><br>
+
+<span class="console"><b>Hello World</b></span><br>
+
+
+
+</div>
+
+
+
+<h3>Раздельная компиляция</h3>
+
+
+
+<p>Сильной стороной языков <b>C/C++</b> является возможность разделять 
+исходный код программы по нескольким файлам. Даже можно сказать больше -
+ возможность раздельной компиляции это основа языка, без неё эффективное
+ использование <b>C</b> не мыслимо. Именно мультифайловое программирование позволяет реализовать на <b>C</b> крупные проекты, например такие как <b>Linux</b> (здесь под словом <b>Linux</b> подразумевается как ядро, так и система в целом). Что даёт раздельная компиляция программисту?</p>
+
+
+
+<p><b>1.</b>&nbsp;&nbsp;Позволяет сделать код программы (проекта) более 
+удобочитаемым. Файл исходника на несколько десятков экранов становиться 
+практически неохватным. Если, в соответствии с некой (заранее 
+продуманной) логикой, разбить его на ряд небольших фрагментов (каждый в 
+отдельном файле), совладать со сложностью проекта будет гораздо проще. </p>
+
+
+
+<p><b>2.</b>&nbsp;&nbsp;Позволяет сократить время повторной компиляции 
+проекта. Если изменения внесены в один файл нет смысла перекомпилировать
+ весь проект, достаточно заново откомпилировать только этот изменённый 
+файл.</p>
+
+
+
+<p><b>3.</b>&nbsp;&nbsp;Позволяет распределить работу над проектом между
+ несколькими разработчиками. Каждый программист творит и отлаживает свою
+ часть проекта, но в любой момент можно будет собрать (пересобрать) все 
+получающиеся наработки в конечный продукт.</p>
+
+
+
+<p><b>4.</b>&nbsp;&nbsp;Без раздельной компиляции не существовало бы 
+библиотек. Посредством библиотек реализовано повторное использование и 
+распространение кода на <b>C/C++</b>, причем кода бинарного, что 
+позволяет с одной стороны предоставить разработчикам простой механизм 
+включения его в свои программы, с другой стороны скрыть от них 
+конкретные детали реализации. Работая над проектом, всегда стоит 
+задумываться над тем, а не понадобиться что-либо из уже сделанного 
+когда-нибудь в будущем? Может стоит заранее выделить и оформить часть 
+кода как библиотеку? По моему, такой подход, существенно упрощает жизнь и
+ экономит массу времени.</p>
+
+
+
+<p><b>GCC</b>, разумеется, поддерживает раздельную компиляцию, причем не
+ требует от пользователя каких либо специальных указаний. В общем все 
+очень просто.</p>
+
+
+
+<p>Вот практический пример (правда весьма и весьма условный).</p>
+
+
+
+<p>Набор файлов исходного кода:</p>
+
+
+
+<div class="codeblock">
+
+<code><font color="#0000ff">/*</font><font color="#0000ff"> main.c </font><font color="#0000ff">*/</font></code><br>
+
+<br>
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">&lt;stdio.h&gt;</font></code><br>
+
+<br>
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">"first.h"</font></code><br>
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">"second.h"</font></code><br>
+
+<br>
+
+<code><font color="#2e8b57"><b>int</b></font> main(<font color="#2e8b57"><b>void</b></font>)</code><br>
+
+<code>{</code><br>
+
+<br>
+
+<code>        first();</code><br>
+
+<code>        second();</code><br>
+
+<br>
+
+<code>        printf(<font color="#ff00ff">"Main function...</font><font color="#6a5acd">\n</font><font color="#ff00ff">"</font>);</code><br>
+
+<br>
+
+<code>        <font color="#a52a2a"><b>return</b></font> <font color="#ff00ff">0</font>;</code><br>
+
+<br>
+
+<code>}</code><br>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="codeblock">
+
+<code><font color="#0000ff">/*</font><font color="#0000ff"> first.h </font><font color="#0000ff">*/</font></code><br>
+
+<br>
+
+<code><font color="#2e8b57"><b>void</b></font> first(<font color="#2e8b57"><b>void</b></font>);</code><br>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="codeblock">
+
+<code><font color="#0000ff">/*</font><font color="#0000ff"> first.c </font><font color="#0000ff">*/</font></code><br>
+
+<br>
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">&lt;stdio.h&gt;</font></code><br>
+
+<br>
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">"first.h"</font></code><br>
+
+<br>
+
+<code><font color="#2e8b57"><b>void</b></font> first(<font color="#2e8b57"><b>void</b></font>)</code><br>
+
+<code>{</code><br>
+
+<br>
+
+<code>        printf(<font color="#ff00ff">"First function...</font><font color="#6a5acd">\n</font><font color="#ff00ff">"</font>);</code><br>
+
+<br>
+
+<code>}</code><br>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="codeblock">
+
+<code><font color="#0000ff">/*</font><font color="#0000ff"> second.h </font><font color="#0000ff">*/</font></code><br>
+
+<br>
+
+<code><font color="#2e8b57"><b>void</b></font> second(<font color="#2e8b57"><b>void</b></font>);</code><br>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="codeblock">
+
+<code><font color="#0000ff">/*</font><font color="#0000ff"> second.c </font><font color="#0000ff">*/</font></code><br>
+
+<br>
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">&lt;stdio.h&gt;</font></code><br>
+
+<br>
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">"second.h"</font></code><br>
+
+<br>
+
+<code><font color="#2e8b57"><b>void</b></font> second(<font color="#2e8b57"><b>void</b></font>)</code><br>
+
+<code>{</code><br>
+
+<br>
+
+<code>        printf(<font color="#ff00ff">"Second function...</font><font color="#6a5acd">\n</font><font color="#ff00ff">"</font>);</code><br>
+
+<br>
+
+<code>}</code><br>
+
+</div>
+
+
+
+<p>В общем имеем вот что:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>first.c  first.h  main.c  second.c  second.h</b></span><br>
+
+</div>
+
+
+
+<p>Все это хозяйство можно скомпилировать в одну команду:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -Wall -o main main.c first.c second.c</span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>First function...</b></span><br>
+
+<span class="console"><b>Second function...</b></span><br>
+
+<span class="console"><b>Main function...</b></span><br>
+
+</div>
+
+
+
+<p>Только это не даст нам практически ни каких бонусов, ну за 
+исключением более структурированного и удобочитаемого кода, разнесённого
+ по нескольким файлам. Все перечисленные выше преимущества появятся в 
+случае такого подхода к компиляции:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -Wall -c main.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -Wall -c first.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -Wall -c second.c</span><br>
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>first.c  first.h  first.o  main.c  main.o  second.c  second.h  second.o</b></span><br>
+
+<span class="console">$</span> <span class="code">gcc -o main main.o first.o second.o</span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>First function...</b></span><br>
+
+<span class="console"><b>Second function...</b></span><br>
+
+<span class="console"><b>Main function...</b></span><br>
+
+</div>
+
+
+
+<p>Что мы сделали? Из каждого исходного файла (компилируя с опцией <b><span class="item">-c</span></b>) получили объектный файл. Затем объектные файлы слинковали в итоговый исполняемый. Разумеется команд <b>gcc</b> стало больше, но в ручную ни кто проекты не собирает, для этого есть утилиты сборщики (самая популярная <b>make</b>). При использовании утилит сборщиков и проявятся все из перечисленных выше преимуществ раздельной компиляции.</p>
+
+
+
+<p>Возникает вопрос: как линковщик ухитряется собирать вместе объектные 
+файлы, правильно вычисляя адресацию вызовов? Откуда он вообще узнаёт, 
+что в файле <span class="item">second.o</span> содержится код функции <span class="item">second()</span>, а в коде файла <span class="item">main.o</span> присутствует её вызов? Оказывается всё просто - в объектном файле присутствует так называемая <i><b>таблица символов</b></i>,
+ включающая имена некоторых позиций кода (функций и внешних переменных).
+ Линковщик просматривает таблицу символов каждого объектного файла, ищет
+ общие (с совпадающими именами) позиции, на основании чего делает выводы
+ о фактическом местоположении кода используемых функций (или блоков 
+данных) и, соответственно, производит перерасчёт адресов вызовов в 
+исполняемом файле.</p>
+
+
+
+<p>Просмотреть таблицу символов можно с помощью утилиты <b>nm</b>.</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">nm main.o</span><br>
+
+<span class="console"><b>         U first</b></span><br>
+
+<span class="console"><b>00000000 T main</b></span><br>
+
+<span class="console"><b>         U puts</b></span><br>
+
+<span class="console"><b>         U second</b></span><br>
+
+<span class="console">$</span> <span class="code">nm first.o</span><br>
+
+<span class="console"><b>00000000 T first</b></span><br>
+
+<span class="console"><b>         U puts</b></span><br>
+
+<span class="console">$</span> <span class="code">nm second.o</span><br>
+
+<span class="console"><b>         U puts</b></span><br>
+
+<span class="console"><b>00000000 T second</b></span><br>
+
+</div>
+
+
+
+<p>Появление вызова <span class="item">puts</span> объясняется использованием функции стандартной библиотеки <span class="item">printf()</span>, превратившейся в <span class="item">puts()</span> на этапе компиляции.</p>
+
+
+
+<p>Таблица символов прописывается не только в объектный, но и в исполняемый файл:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">nm main</span><br>
+
+<span class="console"><b>08049f20 d _DYNAMIC</b></span><br>
+
+<span class="console"><b>08049ff4 d _GLOBAL_OFFSET_TABLE_</b></span><br>
+
+<span class="console"><b>080484fc R _IO_stdin_used</b></span><br>
+
+<span class="console"><b>         w _Jv_RegisterClasses</b></span><br>
+
+<span class="console"><b>08049f10 d __CTOR_END__</b></span><br>
+
+<span class="console"><b>08049f0c d __CTOR_LIST__</b></span><br>
+
+<span class="console"><b>08049f18 D __DTOR_END__</b></span><br>
+
+<span class="console"><b>08049f14 d __DTOR_LIST__</b></span><br>
+
+<span class="console"><b>08048538 r __FRAME_END__</b></span><br>
+
+<span class="console"><b>08049f1c d __JCR_END__</b></span><br>
+
+<span class="console"><b>08049f1c d __JCR_LIST__</b></span><br>
+
+<span class="console"><b>0804a014 A __bss_start</b></span><br>
+
+<span class="console"><b>0804a00c D __data_start</b></span><br>
+
+<span class="console"><b>080484b0 t __do_global_ctors_aux</b></span><br>
+
+<span class="console"><b>08048360 t __do_global_dtors_aux</b></span><br>
+
+<span class="console"><b>0804a010 D __dso_handle</b></span><br>
+
+<span class="console"><b>         w __gmon_start__</b></span><br>
+
+<span class="console"><b>080484aa T __i686.get_pc_thunk.bx</b></span><br>
+
+<span class="console"><b>08049f0c d __init_array_end</b></span><br>
+
+<span class="console"><b>08049f0c d __init_array_start</b></span><br>
+
+<span class="console"><b>08048440 T __libc_csu_fini</b></span><br>
+
+<span class="console"><b>08048450 T __libc_csu_init</b></span><br>
+
+<span class="console"><b>         U __libc_start_main@@GLIBC_2.0</b></span><br>
+
+<span class="console"><b>0804a014 A _edata</b></span><br>
+
+<span class="console"><b>0804a01c A _end</b></span><br>
+
+<span class="console"><b>080484dc T _fini</b></span><br>
+
+<span class="console"><b>080484f8 R _fp_hw</b></span><br>
+
+<span class="console"><b>080482b8 T _init</b></span><br>
+
+<span class="console"><b>08048330 T _start</b></span><br>
+
+<span class="console"><b>0804a014 b completed.7021</b></span><br>
+
+<span class="console"><b>0804a00c W data_start</b></span><br>
+
+<span class="console"><b>0804a018 b dtor_idx.7023</b></span><br>
+
+<span class="console"><b>0804840c T first</b></span><br>
+
+<span class="console"><b>080483c0 t frame_dummy</b></span><br>
+
+<span class="console"><b>080483e4 T main</b></span><br>
+
+<span class="console"><b>         U puts@@GLIBC_2.0</b></span><br>
+
+<span class="console"><b>08048420 T second</b></span><br>
+
+</div>
+
+
+
+<p>Включение таблицы символов в исполняемый файл в частности необходимо 
+для упрощения отладки. В принципе для выполнения приложения она не очень
+ то и  нужна. Для исполняемых файлов реальных программ, с множеством 
+определений функций и внешних переменных, задействующих кучу разных 
+библиотек, таблица символов становиться весьма обширной. Для сокращения 
+размеров выходного файла её можно удалить, воспользовавшись <b>опцией gcc <span class="item">-s</span></b>.</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -s -o main main.o first.o second.o</span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>First function...</b></span><br>
+
+<span class="console"><b>Second function...</b></span><br>
+
+<span class="console"><b>Main function...</b></span><br>
+
+<span class="console">$</span> <span class="code">nm main</span><br>
+
+<span class="console"><b>nm: main: no symbols</b></span><br>
+
+</div>
+
+
+
+<p>Необходимо отметить, что в ходе компоновки, линковщик не делает ни 
+каких проверок контекста вызова функций, он не следит ни за типом 
+возвращаемого значения, ни за типом и количеством принимаемых параметров
+ (да ему и не откуда взять такую информацию). Все проверки корректности 
+вызовов должны быть сделаны на этапе компиляции. В случае 
+мультифайлового программирования для этого необходимо использовать 
+механизм заголовочных файлов языка <b>C</b>.</p> 
+
+
+
+<h3>Библиотеки</h3>
+
+
+
+<p>Библиотека - в языке <b>C</b>, файл содержащий объектный код, который
+ может быть присоединен к использующей библиотеку программе на этапе 
+линковки. Фактически библиотека это набор особым образом скомпонованных 
+объектных файлов.</p>
+
+
+
+<p>Назначение библиотек - предоставить программисту стандартный механизм
+ повторного использования кода, причем механизм простой и надёжный.</p>
+
+
+
+<p>С точки зрения операционной системы и прикладного программного обеспечения библиотеки бывают <i><b>статическими</b></i> и <i><b>разделяемыми</b></i> (<i><b>динамическими</b></i>).</p>
+
+
+
+<p>Код статических библиотек включается в состав исполняемого файла в 
+ходе линковки последнего. Библиотека оказывается "зашитой" в файл, код 
+библиотеки "сливается" с остальным кодом файла. Программа использующая 
+статические библиотеки становиться автономной и может быть запущена 
+практически на любом компьютере с подходящей архитектурой и операционной
+ системой.</p>
+
+
+
+<p>Код разделяемой библиотеки загружается и подключается к коду 
+программы операционной системой, по запросу программы в ходе её 
+исполнения. В состав исполняемого файла программы код динамической 
+библиотеки не входит, в исполняемый файл включается только ссылка на 
+библиотеку. В результате, программа использующая разделяемые библиотеки 
+перестает быть автономной и может быть успешно запущена только в системе
+ где задействованные библиотеки установлены.</p>
+
+
+
+<p>Парадигма разделяемых библиотек предоставляет три существенных преимущества:</p>
+
+
+
+<p><b>1.</b>&nbsp;&nbsp;Многократно сокращается размер исполняемого 
+файла. В системе, включающей множество бинарных файлов, использующих 
+один и тот же код, отпадает необходимость хранить копию этого кода для 
+каждого исполняемого файла.</p>   
+
+
+
+<p><b>2.</b>&nbsp;&nbsp;Код разделяемой библиотеки используемый 
+несколькими приложениями храниться в оперативной памяти в одном 
+экземпляре (на самом деле не всё так просто...), в результате 
+сокращается потребность системы в доступной оперативной памяти.</p>
+
+
+
+<p><b>3.</b>&nbsp;&nbsp;Отпадает необходимость пересобирать каждый 
+исполняемый файл в случае внесения изменений в код общей для них 
+библиотеки. Изменения и исправления кода динамической библиотеки 
+автоматически отразятся на каждой из использующих её программ.</p>
+
+
+
+<p>Без парадигмы разделяемых библиотек не существовало бы прекомпиллированных (бинарных) дистрибутивов <b>Linux</b>
+ (да ни каких бы не существовало). Представьте размеры дистрибутива, в 
+каждый бинарный файл которого, был бы помещен код стандартной библиотеки
+ <b>C</b> (и всех других подключаемых библиотек). Так же представьте что
+ пришлось бы делать для того, что бы обновить систему, после устранения 
+критической уязвимости в одной из широко задействованных библиотек...</p>
+
+
+
+<p>Теперь немного практики.</p>
+
+
+
+<p>Для иллюстрации воспользуемся набором исходных файлов из предыдущего 
+примера. В нашу самодельную библиотеку поместим код (реализацию) функций
+ <span class="item">first()</span> и <span class="item">second()</span>.</p>
+
+
+
+<p>В Linux принята следующая схема именования файлов библиотек (хотя 
+соблюдается она не всегда) - имя файла библиотеки начинается с префикса <span class="item">lib</span>, за ним следует собственно имя библиотеки, в конце расширение <span class="item">.a</span> (<i><b>archive</b></i>) - для статической библиотеки, <span class="item">.so</span> (<i><b>shared object</b></i>)
+ - для разделяемой (динамической), после расширения через точку 
+перечисляются цифры номера версии (только для динамической библиотеки). 
+Имя, соответствующего библиотеке заголовочного файла (опять же как 
+правило), состоит из имени библиотеки (без префикса и версии) и 
+расширения <span class="item">.h</span>. Например: <span class="item">libogg.a</span>, <span class="item">libogg.so.0.7.0</span>, <span class="item">ogg.h</span>.</p>
+
+
+
+<p>В начале создадим и используем статическую библиотеку.</p>
+
+
+
+<p>Функции <span class="item">first()</span> и <span class="item">second()</span> составят содержимое нашей библиотеки <span class="item">libhello</span>. Имя файла библиотеки, соответственно, будет <span class="item">libhello.a</span>. Библиотеке сопоставим заголовочный файл <span class="item">hello.h</span>.</p> 
+
+
+
+<div class="codeblock">
+
+<code><font color="#0000ff">/*</font><font color="#0000ff"> hello.h </font><font color="#0000ff">*/</font></code><br>
+
+<br>
+
+<code><font color="#2e8b57"><b>void</b></font> first(<font color="#2e8b57"><b>void</b></font>);</code><br>
+
+<code><font color="#2e8b57"><b>void</b></font> second(<font color="#2e8b57"><b>void</b></font>);</code><br>
+
+</div>
+
+
+
+<p>Разумеется, строки:</p>
+
+
+
+<div class="codeblock">
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">"first.h"</font></code>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="codeblock">
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">"second.h"</font></code>
+
+</div>
+
+
+
+<p>в файлах <span class="item">main.c</span>, <span class="item">first.c</span> и <span class="item">second.c</span> необходимо заменить на:</p>
+
+
+
+<div class="codeblock">
+
+<code><font color="#a020f0">#include </font><font color="#ff00ff">"hello.h"</font></code>
+
+</div>
+
+
+
+<p>Ну а теперь, введем следующую последовательность команд:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -Wall -c first.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -Wall -c second.c</span><br>
+
+<span class="console">$</span> <span class="code">ar crs libhello.a first.o second.o</span><br>
+
+<span class="console">$</span> <span class="code">file libhello.a</span><br>
+
+<span class="console"><b>libhello.a: current ar archive</b></span><br>
+
+</div>
+
+
+
+<p>Как уже было сказано - библиотека это набор объектных файлов. Первыми двумя командами мы и создали эти объектные файлы.</p>
+
+
+
+<p>Далее необходимо объектные файлы скомпоновать в набор. Для этого используется архиватор <b>ar</b>
+ - утилита "склеивает" несколько файлов в один, в полученный архив 
+включает информацию требуемую для восстановления (извлечения) каждого 
+индивидуального файла (включая его атрибуты принадлежности, доступа, 
+времени). Какого-либо "сжатия" содержимого архива или иного 
+преобразования хранимых данных при этом не производится.</p>
+
+
+
+<p><b>Опция <span class="item">c</span> <span class="gitem">arname</span></b> - создать архив, если архив с именем <span class="gitem">arname</span> не существует он будет создан, в противном случае файлы будут добавлены к имеющемуся архиву.</p>
+
+
+
+<p><b>Опция <span class="item">r</span></b> - задает режим обновления 
+архива, если в архиве файл с указанным именем уже существует, он будет 
+удален, а новый файл дописан в конец архива.</p>
+
+
+
+<p><b>Опция <span class="item">s</span></b> - добавляет (обновляет) 
+индекс архива. В данном случае индекс архива это таблица, в которой для 
+каждого определенного в архивируемых файлах символического имени (имени 
+функции или блока данных) сопоставлено соответствующее ему имя 
+объектного файла. Индекс архива необходим для ускорения работы с 
+библиотекой - для того чтобы найти нужное определение, отпадает 
+необходимость просматривать таблицы символов всех файлов архива, можно 
+сразу перейти к файлу, содержащему искомое имя. Просмотреть индекс 
+архива можно с помощью уже знакомой утилиты <b>nm</b> воспользовавшись её <b>опцией <span class="item">-s</span></b> (так же будут показаны таблицы символов всех объектных файлов архива):</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">nm -s libhello.a</span><br>
+
+<span class="console"><b>Archive index:</b></span><br>
+
+<span class="console"><b>first in first.o</b></span><br>
+
+<span class="console"><b>second in second.o</b></span><br>
+
+<br>
+
+<span class="console"><b>first.o:</b></span><br>
+
+<span class="console"><b>00000000 T first</b></span><br>
+
+<span class="console"><b>         U puts</b></span><br>
+
+<br>
+
+<span class="console"><b>second.o:</b></span><br>
+
+<span class="console"><b>         U puts</b></span><br>
+
+<span class="console"><b>00000000 T second</b></span><br>
+
+</div>
+
+
+
+<p>Для создания индекса архива существует специальная утилита <b>ranlib</b>. Библиотеку <span class="item">libhello.a</span> можно было сотворить и так:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">ar cr libhello.a first.o second.o</span><br>
+
+<span class="console">$</span> <span class="code">ranlib libhello.a</span><br>
+
+</div>
+
+
+
+<p>Впрочем библиотека будет прекрасно работать и без индекса архива.</p>
+
+
+
+<p>Теперь воспользуемся нашей библиотекой:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -Wall -c main.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -o main main.o -L. -lhello</span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>First function...</b></span><br>
+
+<span class="console"><b>Second function...</b></span><br>
+
+<span class="console"><b>Main function...</b></span><br>
+
+</div>
+
+
+
+<p>Работает...</p>
+
+
+
+<p>Ну теперь комментарии... Появились две новые опции <b>gcc</b>:</p>
+
+
+
+<p><b>Опция <span class="item">-l</span><span class="gitem">name</span></b> - передаётся линковщику, указывает на необходимость подключить к исполняемому файлу библиотеку <span class="gitem">libname</span>.
+ Подключить значит указать, что такие-то и такие-то функции (внешние 
+переменные) определены в такой-то библиотеке. В нашем примере библиотека
+ статическая, все символьные имена будут ссылаться на код находящийся 
+непосредственно в исполняемом файле. Обратите внимание в опции <b><span class="item">-l</span></b> имя библиотеки  задается как <span class="gitem">name</span> без приставки <span class="gitem">lib</span>.</p>
+
+
+
+<p><b>Опция <span class="item">-L</span><span class="gitem">/путь/к/каталогу/с/библиотеками</span></b> - передаётся линковщику, указывает путь к каталогу содержащему подключаемые библиотеки. В нашем случае задана точка  <b><span class="gitem">.</span></b>, линковщик сначала будет искать библиотеки в текущем каталоге, затем в каталогах определённых в системе.</p>
+
+
+<!-- Начало первого дополнения -->
+
+<p>Здесь необходимо сделать небольшое замечание. Дело в том, что для ряда опций <b>gcc</b>
+ важен порядок их следования в командной строке. Так линковщик ищет код,
+ соответствующий указанным в таблице символов файла именам в 
+библиотеках, перечисленных в командной строке <b>после</b> имени этого файла. Содержимое библиотек перечисленных до имени файла линковщик игнорирует:</p>
+
+<div class="codeblock">
+<span class="console">$</span> <span class="code">gcc -Wall -c main.c</span><br>
+<span class="console">$</span> <span class="code">gcc -o main -L. -lhello main.o</span><br>
+<span class="console"><b>main.o: In function `main':</b></span><br>
+<span class="console"><b>main.c:(.text+0xa): undefined reference to `first'</b></span><br>
+<span class="console"><b>main.c:(.text+0xf): undefined reference to `second'</b></span><br>
+<span class="console"><b>collect2: ld returned 1 exit status</b></span><br>
+<span class="console">$</span> <span class="code">gcc -o main main.o -L. -lhello</span><br>
+<span class="console">$</span> <span class="code">./main</span><br>
+<span class="console"><b>First function...</b></span><br>
+<span class="console"><b>Second function...</b></span><br>
+<span class="console"><b>Main function...</b></span><br>
+</div>
+
+<p>Такая особенность поведения <b>gcc</b> обусловлена желанием 
+разработчиков предоставить пользователю возможность по разному 
+комбинировать файлы с библиотеками, использовать пересекающие имена... 
+На мой взгляд, если возможно, лучше этим не заморачиваться. В общем 
+подключаемые библиотеки необходимо перечислять после имени ссылающегося 
+на них файла.</p>
+
+<!-- Конец первого дополнения -->
+
+<p>Существует альтернативный способ указания местоположения библиотек в 
+системе. В зависимости от дистрибутива, переменная окружения <span class="item">LD_LIBRARY_PATH</span> или <span class="item">LIBRARY_PATH</span>
+ может хранить список разделенных знаком двоеточия каталогов, в которых 
+линковщик должен искать библиотеки. Как правило, по умолчанию эта 
+переменная вообще не определена, но ни чего не мешает её создать:</p> 
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">echo $LD_LIBRARY_PATH</span><br>
+
+<span class="console"><b> </b></span><br>
+
+<span class="console">$</span> <span class="code">gcc -o main main.o -lhello</span><br>
+
+<span class="console"><b>/usr/lib/gcc/i686-pc-linux-gnu/4.4.3/../../../../i686-pc-linux-gnu/bin/ld: cannot find -lhello</b></span><br>
+
+<span class="console"><b>collect2: выполнение ld завершилось с кодом возврата 1</b></span><br>
+
+<span class="console">$</span> <span class="code">export LIBRARY_PATH=.</span><br>
+
+<span class="console">$</span> <span class="code">gcc -o main main.o -lhello</span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>First function...</b></span><br>
+
+<span class="console"><b>Second function...</b></span><br>
+
+<span class="console"><b>Main function...</b></span><br>
+
+</div>
+
+
+
+<p>Манипуляции с переменными окружения полезны при создании и отладке 
+собственных библиотек, а так же если возникает необходимость подключить к
+ приложению какую-нибудь нестандартную (устаревшую, обновленную, 
+изменённую - в общем отличную от включенной в дистрибутив) разделяемую 
+библиотеку.</p>
+
+
+
+<p>Теперь создадим и используем библиотеку динамическую.</p>
+
+
+
+<p>Набор исходных файлов остается без изменения. Вводим команды, смотрим что получилось, читаем комментарии:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -Wall -fPIC -c first.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -Wall -fPIC -c second.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -shared -o libhello.so.2.4.0.5 -Wl,-soname,libhello.so.2 first.o second.o</span><br>
+
+</div>
+
+
+
+<p>Что получили в результате?</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">file libhello.so.2.4.0.5</span><br>
+
+<span class="console"><b>libhello.so.2.4.0.5: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, not stripped</b></span><br>
+
+</div>
+
+
+
+<p>Файл <span class="item">libhello.so.2.4.0.5</span>, это и есть наша разделяемая библиотека. Как её использовать поговорим чуть ниже.</p>
+
+
+
+<p>Теперь комментарии:</p>
+
+
+
+<p><b>Опция <span class="item">-fPIC</span></b> - требует от компилятора, при создании объектных файлов, порождать <i><b>позиционно-независимый код</b></i> (<i><b>PIC - Position Independent Code</b></i>),
+ его основное отличие в способе представления адресов. Вместо указания 
+фиксированных (статических) позиций, все адреса вычисляются исходя из 
+смещений заданных в <i><b>глобальной таблицы смещений</b></i> (<i><b>global offset table - GOT</b></i>).
+ Формат позиционно-независимого кода позволяет подключать исполняемые 
+модули к коду основной программы в момент её загрузки. Соответственно, 
+основное назначение позиционно-независимого кода - создание динамических
+ (разделяемых) библиотек.</p>
+
+
+
+<p><b>Опция <span class="item">-shared</span></b> - указывает <b>gcc</b>, что в результате должен быть собран не исполняемый файл, а разделяемый объект - динамическая библиотека.</p>
+
+
+
+<p><b>Опция <span class="item">-Wl,-soname,libhello.so.2</span></b> - задает <i><b>soname</b></i>
+ библиотеки. О soname подробно поговорим в следующем абзаце. Сейчас 
+обсудим формат опции. Сея странная, на первый взгляд, конструкция с 
+запятыми предназначена для непосредственного взаимодействия пользователя
+ с линковщиком. По ходу компиляции <b>gcc</b> вызывает линковщик автоматически, автоматически же, по собственному усмотрению, <b>gcc</b>
+ передает ему необходимые для успешного завершения задания опции. Если у
+ пользователя возникает потребность самому вмешаться в процесс линковки 
+он может воспользоваться специальной опцией <b>gcc</b> <b><span class="item">-Wl,</span><span class="gitem">-option</span><span class="item">,</span><span class="gitem">value1</span><span class="item">,</span><span class="gitem">value2</span><span class="item">...</span></b>. Что означает передать линковщику (<b><span class="item">-Wl</span></b>) опцию <b><span class="gitem">-option</span></b> с аргументами <b><span class="gitem">value1</span></b>, <b><span class="gitem">value2</span></b> и так далее. В нашем случае линковщику была передана опция <b><span class="item">-soname</span></b> с аргументом <b><span class="item">libhello.so.2</span></b>.</p>
+
+
+
+<p>Теперь о soname. При создании и распространении библиотек встает 
+проблема совместимости и контроля версий. Для того чтобы система, 
+конкретно загрузчик динамических библиотек, имели представление о том 
+библиотека какой версии была использована при компиляции приложения и, 
+соответственно, необходима для его успешного функционирования, был 
+предусмотрен специальный идентификатор - <i><b>soname</b></i>, 
+помещаемый как в файл самой библиотеки, так и в исполняемый файл 
+приложения. Идентификатор soname это строка, включающая имя библиотеки с
+ префиксом <span class="item">lib</span>, точку, расширение <span class="item">so</span>, снова точку и оду или две (разделенные точкой) цифры версии библиотеки - <span class="item">lib</span><span class="gitem">name</span><span class="item">.so.</span><span class="gitem">x</span><span class="item">.</span><span class="gitem">y</span>.
+ То есть soname совпадает с именем файла библиотеки вплоть до первой или
+ второй цифры номера версии. Пусть имя исполняемого файла нашей 
+библиотеки <span class="item">libhello.so.2.4.0.5</span>, тогда soname библиотеки может быть <span class="item">libhello.so.2</span>.
+ При изменении интерфейса библиотеки её soname необходимо изменять! 
+Любая модификация кода, приводящая к несовместимости с предыдущими 
+релизами должна сопровождаться появлением нового soname.</p>
+
+
+
+<p>Как же это все работает? Пусть для успешного исполнения некоторого приложения необходима библиотека с именем <span class="item">hello</span>, пусть в системе таковая имеется, при этом имя файла библиотеки <span class="item">libhello.so.2.4.0.5</span>, а прописанное в нем soname библиотеки <span class="item">libhello.so.2</span>. На этапе компиляции приложения, линковщик, в соответствии с опцией <b><span class="item">-l</span><span class="gitem">hello</span></b>, будет искать в системе файл с именем <span class="item">libhello.so</span>. В реальной системе <span class="item">libhello.so</span> это символическая ссылка на файл <span class="item">libhello.so.2.4.0.5</span>.
+ Получив доступ к файлу библиотеки, линковщик считает прописанное в нем 
+значение soname и наряду с прочим поместит его в исполняемый файл 
+приложения. Когда приложение будет запущено, загрузчик динамических 
+библиотек получит запрос на подключение библиотеки с soname, считанным 
+из исполняемого файла, и попытается найти в системе библиотеку, имя 
+файла которой совпадает с soname. То есть загрузчик попытается отыскать 
+файл <span class="item">libhello.so.2</span>. Если система настроена корректно, в ней должна присутствовать символическая ссылка <span class="item">libhello.so.2</span> на файл <span class="item">libhello.so.2.4.0.5</span>,
+ загрузчик получит доступ к требуемой библиотеки и далее не задумываясь 
+(и ни чего более не проверяя) подключит её к приложению. Теперь 
+представим, что мы перенесли откомпилированное таким образом приложение в
+ другую систему, где развернута только предыдущая версия библиотеки с 
+soname <span class="item">libhello.so.1</span>. Попытка запустить программу приведет к ошибке, так как в этой системе файла с именем <span class="item">libhello.so.2</span> нет.</p>
+
+
+
+<p>Таким образом, на этапе компиляции линковщику необходимо предоставить
+ файл библиотеки (или символическую ссылку на файл библиотеки) с именем <span class="item">lib</span><span class="gitem">name</span><span class="item">.so</span>, на этапе исполнения загрузчику потребуется файл (или символическая ссылка) с именем <span class="item">lib</span><span class="gitem">name</span><span class="item">.so.</span><span class="gitem">x</span><span class="item">.</span><span class="gitem">y</span>. При чем имя <span class="item">lib</span><span class="gitem">name</span><span class="item">.so.</span><span class="gitem">x</span><span class="item">.</span><span class="gitem">y</span> должно совпадать со строкой soname использованной библиотеки.</p>
+
+
+
+<p>В бинарных дистрибутивах, как правило, файл библиотеки <span class="item">libhello.so.2.4.0.5</span> и ссылка на него <span class="item">libhello.so.2</span> будут помещены в пакет <span class="item">libhello</span>, а необходимая только для компиляции ссылка <span class="item">libhello.so</span>, вместе с заголовочным файлом библиотеки <span class="item">hello.h</span> будет упакована в пакет <span class="item">libhello-devel</span> (в <span class="item">devel</span> пакете окажется и файл статической версии библиотеки <span class="item">libhello.a</span>,
+ статическая библиотека может быть использована, также только на этапе 
+компиляции). При распаковке пакета все перечисленные файлы и ссылки 
+(кроме <span class="item">hello.h</span>) окажутся в одном каталоге.</p>
+
+
+
+<img src="lib.png" alt="Пример именования библиотек в Linux. Ubuntu">
+
+
+
+<p>Убедимся, что заданная строка soname действительно прописана в файле нашей библиотеки. Воспользуемся мега утилитой <b>objdump</b> с опцией <span class="item"><b>-p</b></span>:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">objdump -p libhello.so.2.4.0.5 | grep SONAME</span><br>
+
+<span class="console"><b>  SONAME               libhello.so.2</b></span><br>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="noteblock">
+
+
+
+<p>Утилита <b>objdump</b> - мощный инструмент, позволяющий получить 
+исчерпывающую информацию о внутреннем содержании (и устройстве) 
+объектного или исполняемого файла. В man странице утилиты сказано, что <b>objdump</b>
+ прежде всего будет полезен программистам, создающими средства отладки и
+ компиляции, а не просто пишущих какие-нибудь прикладные программы :) В 
+частности с опцией <span class="item"><b>-d</b></span> это дизассемблер. Мы воспользовались опцией <span class="item"><b>-p</b></span> - вывести различную метаинформацию о объектном файле.</p>
+
+
+
+</div>
+
+
+
+<p>В приведенном примере создания библиотеки мы неотступно следовали 
+принципам раздельной компиляции. Разумеется скомпилировать библиотеку 
+можно было бы и вот так, одним вызовом <b>gcc</b>:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -shared -Wall -fPIC -o libhello.so.2.4.0.5 -Wl,-soname,libhello.so.2 first.c second.c</span>
+
+</div>
+
+
+
+<p>Теперь попытаемся воспользоваться получившейся библиотекой:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -Wall -c main.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -o main main.o -L. -lhello -Wl,-rpath,.</span><br>
+
+<span class="console"><b>/usr/bin/ld: cannot find -lhello</b></span><br>
+
+<span class="console"><b>collect2: ld returned 1 exit status</b></span><br>
+
+</div>
+
+
+
+<p>Линковщик ругается. Вспоминаем, что было сказано выше о символических ссылках. Создаем <span class="item">libhello.so</span> и повторяем попытку:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">ln -s libhello.so.2.4.0.5 libhello.so</span><br>
+
+<span class="console">$</span> <span class="code">gcc -o main main.o -L. -lhello -Wl,-rpath,.</span><br>
+
+</div>
+
+
+
+<p>Теперь все довольны. Запускаем созданный бинарник:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>./main: error while loading shared libraries: libhello.so.2: cannot open shared object file: No such file or directory</b></span><br>
+
+</div>
+
+
+
+<p>Ошибка... Ругается загрузчик, не может найти библиотеку <span class="item">libhello.so.2</span>. Убедимся, что в исполняемом файле действительно прописана ссылка на <span class="item">libhello.so.2</span>:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">objdump -p main | grep NEEDED</span><br>
+
+<span class="console"><b>  NEEDED               libhello.so.2</b></span><br>
+
+<span class="console"><b>  NEEDED               libc.so.6</b></span><br>
+
+</div>
+
+
+
+<p>Создаем соответствующую ссылку и повторно запускаем приложение:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">ln -s libhello.so.2.4.0.5 libhello.so.2</span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>First function...</b></span><br>
+
+<span class="console"><b>Second function...</b></span><br>
+
+<span class="console"><b>Main function...</b></span><br>
+
+</div>
+
+
+
+<p>Заработало... Теперь комментарии по новым опциям <b>gcc</b>.</p>
+
+
+
+<p><b>Опция <span class="item">-Wl,-rpath,.</span></b> - уже знакомая конструкция, передать линковщику опцию <b><span class="item">-rpath</span></b> с аргументом <b><span class="item">.</span></b>. С помощью <b><span class="item">-rpath</span></b>
+ в исполняемый файл программы можно прописать дополнительные пути по 
+которым загрузчик разделяемых библиотек будет производить поиск 
+библиотечных файлов. В нашем случае прописан путь <b><span class="item">.</span></b> - поиск файлов библиотек будет начинаться с текущего каталога.</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">objdump -p main | grep RPATH</span><br>
+
+<span class="console"><b>  RPATH                .</b></span><br>
+
+</div>
+
+
+
+<p>Благодаря указанной опции, при запуске программы отпала необходимость
+ изменять переменные окружения. Понятно, что если перенести программу в 
+другой каталог и попытаться запустить, файл библиотеки будет не найден и
+ загрузчик выдаст сообщение об ошибке:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">mv main ..</span><br>
+
+<span class="console">$</span> <span class="code">../main</span><br>
+
+<span class="console"><b>First function...</b></span><br>
+
+<span class="console"><b>Second function...</b></span><br>
+
+<span class="console"><b>Main function...</b></span><br>
+
+<span class="console">$</span> <span class="code">cd ..</span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>./main: error while loading shared libraries: libhello.so.2: cannot open shared object file: No such file or directory</b></span><br>
+
+</div>
+
+
+
+<p>Узнать какие разделяемые библиотеки необходимы приложению можно и с помощью утилиты <b>ldd</b>:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">ldd main</span><br>
+
+<span class="console"><b> linux-vdso.so.1 =&gt;  (0x00007fffaddff000)</b></span><br>
+
+<span class="console"><b> libhello.so.2 =&gt; ./libhello.so.2 (0x00007f9689001000)</b></span><br>
+
+<span class="console"><b> libc.so.6 =&gt; /lib/libc.so.6 (0x00007f9688c62000)</b></span><br>
+
+<span class="console"><b> /lib64/ld-linux-x86-64.so.2 (0x00007f9689205000)</b></span><br>
+
+</div>
+
+
+
+<p>В выводе <b>ldd</b> для каждой требуемой библиотеки указывается её 
+soname и полный путь к файлу библиотеки, определённый в соответствии с 
+настройками системы.</p>
+
+
+
+<p>Сейчас самое время поговорить о том где в системе положено размещать 
+файлы библиотек, где загрузчик пытается их найти и как этим процессом 
+управлять.</p>
+
+
+
+<p>В соответствии с соглашениями <a href="http://ru.wikipedia.org/wiki/FHS"><b>FHS (Filesystem Hierarchy Standard)</b></a> в системе должны быть два (как минимум) каталога для хранения файлов библиотек:</p>
+
+
+
+<p><span class="item">/lib</span> - здесь собраны основные библиотеки дистрибутива, необходимые для работы программ из <span class="item">/bin</span> и <span class="item">/sbin</span>;</p>
+
+
+
+<p><span class="item">/usr/lib</span> - здесь хранятся библиотеки необходимые прикладным программам из <span class="item">/usr/bin</span> и <span class="item">/usr/sbin</span>;</p>
+
+
+
+<p>Соответствующие библиотекам заголовочные файлы должны находиться в каталоге <span class="item">/usr/include</span>.</p>
+
+
+
+<p>Загрузчик по умолчанию будет искать файлы библиотек в этих каталогах.</p>
+
+
+
+<p>Кроме перечисленных выше, в системе должен присутствовать каталог <span class="item">/usr/local/lib</span>
+ - здесь должны находиться библиотеки, развернутые пользователем 
+самостоятельно, минуя систему управления пакетами (не входящие в состав 
+дистрибутива). Например в этом каталоге по умолчанию окажутся библиотеки
+ скомпилированные из исходников (программы установленные из исходников 
+будут размещены в <span class="item">/usr/local/bin</span> и <span class="item">/usr/local/sbin</span>, разумеется речь идет о бинарных дистрибутивах). Заголовочные файлы библиотек в этом случае будут помещены в <span class="item">/usr/local/include</span>.</p>
+
+
+
+<p>В ряде дистрибутивов (в <b>Ubuntu</b>) загрузчик не настроен просматривать каталог <span class="item">/usr/local/lib</span>,
+ соответственно, если пользователь установит библиотеку из исходников, 
+система её не увидит. Сиё авторами дистрибутива сделано специально, что 
+бы приучить пользователя устанавливать программное обеспечение только 
+через систему управления пакетами. Как поступить в данном случае будет 
+рассказано ниже.</p>
+
+
+
+<p>В действительности, для упрощения и ускорения процесса поиска файлов 
+библиотек, загрузчик не просматривает при каждом обращении указанные 
+выше каталоги, а пользуется базой данных, хранящейся в файле <span class="item">/etc/ld.so.cache</span>
+ (кэшем библиотек). Здесь собрана информация о том, где в системе 
+находится соответствующий данному soname файл библиотеки. Загрузчик, 
+получив список необходимых конкретному приложению библиотек (список 
+soname библиотек, заданных в исполняемом файле программы), посредством <span class="item">/etc/ld.so.cache</span>
+ определяет путь к файлу каждой требуемой библиотеки и загружает её в 
+память. Дополнительно, загрузчик может просмотреть каталоги 
+перечисленные в системных переменных <span class="item">LD_LIBRARY_PATH</span>, <span class="item">LIBRARY_PATH</span> и в поле <span class="item">RPATH</span> исполняемого файла (смотри выше).</p>
+
+
+
+<p>Для управления и поддержания в актуальном состоянии кэша библиотек используется утилита <b>ldconfig</b>. Если запустить <b>ldconfig</b> без каких-либо опций, программа просмотрит каталоги заданные в командной строке, доверенные каталоги <span class="item">/lib</span> и <span class="item">/usr/lib</span>, каталоги перечисленные в файле <span class="item">/etc/ld.so.conf</span>.
+ Для каждого файла библиотеки, оказавшегося в указанных каталогах, будет
+ считано soname, создана основанная на soname символическая ссылка, 
+обновлена информация в <span class="item">/etc/ld.so.cache</span>.</p>
+
+
+
+<p>Убедимся в сказанном:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello.h  libhello.so  libhello.so.2.4.0.5  main.c</b></span><br>
+
+<span class="console">$</span> <span class="code">gcc -Wall -o main main.c -L. -lhello</span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>./main: error while loading shared libraries: libhello.so.2: cannot open shared object file: No such file or directory</b></span><br>
+
+<span class="console">$</span> <span class="code">sudo ldconfig /полный/путь/к/катаогу/c/примером</span><br>
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello.h  libhello.so  libhello.so.2  libhello.so.2.4.0.5  main  main.c</b></span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>First function...</b></span><br>
+
+<span class="console"><b>Second function...</b></span><br>
+
+<span class="console"><b>Main function...</b></span><br>
+
+<span class="console">$</span> <span class="code">sudo ldconfig</span><br>
+
+<span class="console">$</span> <span class="code">./main</span><br>
+
+<span class="console"><b>./main: error while loading shared libraries: libhello.so.2: cannot open shared object file: No such file or directory</b></span><br>
+
+</div>
+
+
+
+<p>Первым вызовом <b>ldconfig</b> мы внесли в кэш нашу библиотеку, вторым вызовом исключили. Обратите внимание, что при компиляции <span class="item">main</span> была опущена опция <b><span class="item">-Wl,-rpath,.</span></b>, в результате загрузчик проводил поиск требуемых библиотек только в кэше.</p>
+
+
+
+<p>Теперь должно быть понятно как поступить если после установки 
+библиотеки из исходников система её не видит. Прежде всего необходимо 
+внести в файл <span class="item">/etc/ld.so.conf</span> полный путь к каталогу с файлами библиотеки (по умолчанию <span class="item">/usr/local/lib</span>). Формат <span class="item">/etc/ld.so.conf</span>
+ - файл содержит список разделённых двоеточием, пробелом, табуляцией или
+ символом новой строки, каталогов, в которых производится поиск 
+библиотек. После чего вызвать <b>ldconfig</b> без каких-либо опций, но с правами суперпользователя. Всё должно заработать.</p>
+
+
+
+<p>Ну и в конце поговорим о том как уживаются вместе статические и 
+динамические версии библиотек. В чем собственно вопрос? Выше, когда 
+обсуждались принятые имена и расположение файлов библиотек было сказано,
+ что файлы статической и динамической версий библиотеки хранятся в одном
+ и том же каталоге. Как же <b>gcc</b> узнает какой тип библиотеки мы 
+хотим использовать? По умолчанию предпочтение отдается динамической 
+библиотеки. Если линковщик находит файл динамической библиотеки, он не 
+задумываясь цепляет его к исполняемому файлу программы:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">ls</span><br>
+
+<span class="console"><b>hello.h  libhello.a  libhello.so  libhello.so.2  libhello.so.2.4.0.5  main.c</b></span><br>
+
+<span class="console">$</span> <span class="code">gcc -Wall -c main.c</span><br>
+
+<span class="console">$</span> <span class="code">gcc -o main main.o -L. -lhello -Wl,-rpath,.</span><br>
+
+<span class="console">$</span> <span class="code">ldd main</span><br>
+
+<span class="console"><b> linux-vdso.so.1 =&gt;  (0x00007fffe1bb0000)</b></span><br>
+
+<span class="console"><b> libhello.so.2 =&gt; ./libhello.so.2 (0x00007fd50370b000)</b></span><br>
+
+<span class="console"><b> libc.so.6 =&gt; /lib/libc.so.6 (0x00007fd50336c000)</b></span><br>
+
+<span class="console"><b> /lib64/ld-linux-x86-64.so.2 (0x00007fd50390f000)</b></span><br>
+
+<span class="console">$</span> <span class="code">du -h main</span><br>
+
+<span class="console"><b>12K main</b></span><br>
+
+</div>
+
+
+
+<p>Обратите внимание на размер исполняемого файла программы. Он 
+минимально возможный. Все используемые библиотеки линкуются динамически.</p>
+
+
+
+<p>Существует <b>опция gcc <span class="item">-static</span></b> - указание линковщику использовать только статические версии всех необходимых приложению библиотек:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">gcc -static -o main main.o -L. -lhello</span><br>
+
+<span class="console">$</span> <span class="code">file main</span><br>
+
+<span class="console"><b>main: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), statically linked, for GNU/Linux 2.6.15, not stripped</b></span><br>
+
+<span class="console">$</span> <span class="code">ldd main</span><br>
+
+<span class="console"><b> не является динамическим исполняемым файлом</b></span><br>
+
+<span class="console">$</span> <span class="code">du -h main</span><br>
+
+<span class="console"><b>728K main</b></span><br>
+
+</div>
+
+
+
+<p>Размер исполняемого файла в 60 раз больше, чем в предыдущем примере - в файл включены стандартные библиотеки языка <b>C</b>. Теперь наше приложение можно смело переносить из каталога в каталог и даже на другие машины, код библиотеки <span class="item">hello</span> внутри файла, программа полностью автономна.</p>
+
+
+
+<p>Как же быть если необходимо осуществить статическую линковку только 
+части использованных библиотек? Возможный вариант решения - сделать имя 
+статической версии библиотеки отличным от имени разделяемой, а при 
+компиляции приложения указывать какую версию мы хотим использовать на 
+этот раз:</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">mv libhello.a libhello_s.a</span><br>
+
+<span class="console">$</span> <span class="code">gcc -o main main.o -L. -lhello_s</span><br>
+
+<span class="console">$</span> <span class="code">ldd main</span><br>
+
+<span class="console"><b> linux-vdso.so.1 =&gt;  (0x00007fff021f5000)</b></span><br>
+
+<span class="console"><b> libc.so.6 =&gt; /lib/libc.so.6 (0x00007fd0d0803000)</b></span><br>
+
+<span class="console"><b> /lib64/ld-linux-x86-64.so.2 (0x00007fd0d0ba4000)</b></span><br>
+
+<span class="console">$</span> <span class="code">du -h main</span><br>
+
+<span class="console"><b>12K main</b></span><br>
+
+</div>
+
+
+
+<p>Так как размер кода библиотеки <span class="item">libhello</span> ничтожен,</p>
+
+
+
+<div class="codeblock">
+
+<span class="console">$</span> <span class="code">du -h libhello_s.a</span><br>
+
+<span class="console"><b>4,0K libhello.a</b></span><br>
+
+</div>
+
+
+
+<p>размер получившегося исполняемого файла практически не отличается от 
+размера файла созданного с использованием динамической линковки.</p>
+
+
+
+<p>Ну вот пожалуй и все. Большое спасибо всем, кто закончил чтение на этом месте.</p>
+
+
+
+</span>
+<div style="clear: both;"></div>
+</div>
+<div class="post-footer">
+<div class="post-footer-line post-footer-line-1">
+<span class="post-author vcard">
+Автор:
+<span class="fn">Вий</span>
+</span>
+<span class="post-timestamp">
+на
+<a class="timestamp-link" href="http://pyviy.blogspot.com/2010/12/gcc.html" rel="bookmark" title="permanent link"><abbr class="published" title="2010-12-03T19:44:00+05:00">19:44</abbr></a>
+</span>
+<span class="reaction-buttons">
+</span>
+<span class="star-ratings">
+</span>
+<span class="post-comment-link">
+</span>
+<span class="post-backlinks post-comment-link">
+</span>
+<span class="post-icons">
+</span>
+</div>
+<div class="post-footer-line post-footer-line-2">
+<span class="post-labels">
+Ярлыки:
+<a href="http://pyviy.blogspot.com/search/label/C%2FC%2B%2B" rel="tag">C/C++</a>,
+<a href="http://pyviy.blogspot.com/search/label/gcc" rel="tag">gcc</a>,
+<a href="http://pyviy.blogspot.com/search/label/linix" rel="tag">linix</a>
+</span>
+</div>
+<div class="post-footer-line post-footer-line-3">
+<span class="post-location">
+</span>
+</div>
+</div>
+</div>
+<div class="comments" id="comments">
+<a name="comments"></a>
+<h4>
+7
+коммент.:
+        
+</h4>
+<div id="Blog1_comments-block-wrapper">
+<dl class="avatar-comment-indent" id="comments-block">
+<dt class="comment-author " id="c4763664821605252727">
+<a name="c4763664821605252727"></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="gcc_files/blank.gif" alt="" title="Анонимный" height="16" width="16">
+
+</span></div>
+Анонимный
+комментирует...
+</dt>
+<dd class="comment-body" id="Blog1_cmt-4763664821605252727">
+<p>
+Статья хороша, не помешал бы ее pdf-вариант (или какой-другой) для печати
+</p>
+</dd>
+<dd class="comment-footer">
+<span class="comment-timestamp">
+<a href="http://pyviy.blogspot.com/2010/12/gcc.html?showComment=1293618087137#c4763664821605252727" title="comment permalink">
+29 декабря 2010&nbsp;г. 15:21
+</a>
+<span class="item-control blog-admin pid-737134015">
+<a class="comment-delete" href="http://www.blogger.com/delete-comment.g?blogID=920988537392180762&amp;postID=4763664821605252727" title="Удалить комментарий">
+<img src="gcc_files/icon_delete13.gif">
+</a>
+</span>
+</span>
+</dd>
+<dt class="comment-author " id="c5240292816764171922">
+<a name="c5240292816764171922"></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="gcc_files/blank.gif" alt="" title="Илья" height="16" width="16">
+
+</span></div>
+Илья
+комментирует...
+</dt>
+<dd class="comment-body" id="Blog1_cmt-5240292816764171922">
+<p>
+Спасибо за статью
+</p>
+</dd>
+<dd class="comment-footer">
+<span class="comment-timestamp">
+<a href="http://pyviy.blogspot.com/2010/12/gcc.html?showComment=1297090287359#c5240292816764171922" title="comment permalink">
+7 февраля 2011&nbsp;г. 19:51
+</a>
+<span class="item-control blog-admin pid-531600977">
+<a class="comment-delete" href="http://www.blogger.com/delete-comment.g?blogID=920988537392180762&amp;postID=5240292816764171922" title="Удалить комментарий">
+<img src="gcc_files/icon_delete13.gif">
+</a>
+</span>
+</span>
+</dd>
+<dt class="comment-author " id="c5560605043830472169">
+<a name="c5560605043830472169"></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="gcc_files/blank.gif" alt="" title="Анонимный" height="16" width="16">
+
+</span></div>
+Анонимный
+комментирует...
+</dt>
+<dd class="comment-body" id="Blog1_cmt-5560605043830472169">
+<p>
+Хорошая статья, расставила все основные точки.
+</p>
+</dd>
+<dd class="comment-footer">
+<span class="comment-timestamp">
+<a href="http://pyviy.blogspot.com/2010/12/gcc.html?showComment=1308072153527#c5560605043830472169" title="comment permalink">
+14 июня 2011&nbsp;г. 23:22
+</a>
+<span class="item-control blog-admin pid-1368247480">
+<a class="comment-delete" href="http://www.blogger.com/delete-comment.g?blogID=920988537392180762&amp;postID=5560605043830472169" title="Удалить комментарий">
+<img src="gcc_files/icon_delete13.gif">
+</a>
+</span>
+</span>
+</dd>
+<dt class="comment-author " id="c457634793915267378">
+<a name="c457634793915267378"></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="gcc_files/blank.gif" alt="" title="Анонимный" height="16" width="16">
+
+</span></div>
+Анонимный
+комментирует...
+</dt>
+<dd class="comment-body" id="Blog1_cmt-457634793915267378">
+<p>
+Еще один важный момент, при сборке со статическими библиотеками. 
+Необходимо, чтобы список библиотек располагался после файла, к которому 
+они линкуются, иначе линковщик не сможет их найти. Например:<br>g++ -o main -L. -I. -lmylib_s mainclass.cpp - не правильно<br>g++ mainclass.cpp -L. -I. -lmylib_s -o main - правильно<br><br>Это
+ касается именно статических библиотек, для динамических, как хорошо 
+рассказано в статье, есть -soname и -rpath, ну вы поняли...
+</p>
+</dd>
+<dd class="comment-footer">
+<span class="comment-timestamp">
+<a href="http://pyviy.blogspot.com/2010/12/gcc.html?showComment=1308108803173#c457634793915267378" title="comment permalink">
+15 июня 2011&nbsp;г. 9:33
+</a>
+<span class="item-control blog-admin pid-1368247480">
+<a class="comment-delete" href="http://www.blogger.com/delete-comment.g?blogID=920988537392180762&amp;postID=457634793915267378" title="Удалить комментарий">
+<img src="gcc_files/icon_delete13.gif">
+</a>
+</span>
+</span>
+</dd>
+<dt class="comment-author " id="c3920458586190213304">
+<a name="c3920458586190213304"></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="gcc_files/blank.gif" alt="" title="Анонимный" height="16" width="16">
+
+</span></div>
+Анонимный
+комментирует...
+</dt>
+<dd class="comment-body" id="Blog1_cmt-3920458586190213304">
+<p>
+Великолепная статья!
+</p>
+</dd>
+<dd class="comment-footer">
+<span class="comment-timestamp">
+<a href="http://pyviy.blogspot.com/2010/12/gcc.html?showComment=1308331352282#c3920458586190213304" title="comment permalink">
+17 июня 2011&nbsp;г. 23:22
+</a>
+<span class="item-control blog-admin pid-2028345539">
+<a class="comment-delete" href="http://www.blogger.com/delete-comment.g?blogID=920988537392180762&amp;postID=3920458586190213304" title="Удалить комментарий">
+<img src="gcc_files/icon_delete13.gif">
+</a>
+</span>
+</span>
+</dd>
+<dt class="comment-author blog-author" id="c9069722158395380341">
+<a name="c9069722158395380341"></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><a href="http://www.blogger.com/profile/14118793713624648446" rel="nofollow" onclick="" class="avatar-hovercard" id="av-5-14118793713624648446"><img src="gcc_files/b16-rounded.gif" alt="" title="Вий" height="16" width="16">
+
+</a></span></div>
+<a href="http://www.blogger.com/profile/14118793713624648446" rel="nofollow">Вий</a>
+комментирует...
+</dt>
+<dd class="comment-body" id="Blog1_cmt-9069722158395380341">
+<p>
+О списке библиотек поправил...
+</p>
+</dd>
+<dd class="comment-footer">
+<span class="comment-timestamp">
+<a href="http://pyviy.blogspot.com/2010/12/gcc.html?showComment=1309258299731#c9069722158395380341" title="comment permalink">
+28 июня 2011&nbsp;г. 16:51
+</a>
+<span class="item-control blog-admin pid-120190132">
+<a class="comment-delete" href="http://www.blogger.com/delete-comment.g?blogID=920988537392180762&amp;postID=9069722158395380341" title="Удалить комментарий">
+<img src="gcc_files/icon_delete13.gif">
+</a>
+</span>
+</span>
+</dd>
+<dt class="comment-author " id="c6529261518375787945">
+<a name="c6529261518375787945"></a>
+<div class="avatar-image-container avatar-stock"><span dir="ltr"><img src="gcc_files/blank.gif" alt="" title="Анонимный" height="16" width="16">
+
+</span></div>
+Анонимный
+комментирует...
+</dt>
+<dd class="comment-body" id="Blog1_cmt-6529261518375787945">
+<p>
+Спасибо! Замечательная статья!
+</p>
+</dd>
+<dd class="comment-footer">
+<span class="comment-timestamp">
+<a href="http://pyviy.blogspot.com/2010/12/gcc.html?showComment=1313043321633#c6529261518375787945" title="comment permalink">
+11 августа 2011&nbsp;г. 12:15
+</a>
+<span class="item-control blog-admin pid-825103115">
+<a class="comment-delete" href="http://www.blogger.com/delete-comment.g?blogID=920988537392180762&amp;postID=6529261518375787945" title="Удалить комментарий">
+<img src="gcc_files/icon_delete13.gif">
+</a>
+</span>
+</span>
+</dd>
+</dl>
+</div>
+<p class="comment-footer">
+</p><div class="comment-form">
+<a name="comment-form"></a>
+<h4 id="comment-post-message">Отправить комментарий</h4>
+<p>
+</p>
+<a href="http://www.blogger.com/comment-iframe.g?blogID=920988537392180762&amp;postID=3969660084459841630&amp;blogspotRpcToken=7811830" id="comment-editor-src"></a>
+<iframe allowtransparency="true" class="blogger-iframe-colorize blogger-comment-from-post" id="comment-editor" name="comment-editor" src="gcc_files/comment-iframe.htm" frameborder="0" height="410" width="100%"></iframe>
+<script type="text/javascript" src="gcc_files/957670695-comment_from_post_iframe.js"></script>
+<script type="text/javascript">
+      BLOG_CMT_createIframe('http://www.blogger.com/rpc_relay.html', '12397856868849216896');
+    </script>
+</div>
+<p></p>
+<div id="backlinks-container">
+<div id="Blog1_backlinks-container"><a name="links"></a><h4>Ссылки на это сообщение</h4>
+<p class="comment-footer">
+<a class="comment-link" href="http://www.blogger.com/blog-this.g" id="Blog1_backlinks-create-link" target="_blank">Создать ссылку</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="latency-3969660084459841630"></div><script type="text/javascript">if (window['tickAboveFold']) {window['tickAboveFold'](document.getElementById("latency-3969660084459841630")); } </script>
+
+        </div></div>
+      
+<!-- google_ad_section_end -->
+</div>
+<div class="blog-pager" id="blog-pager">
+<span id="blog-pager-older-link">
+<a class="blog-pager-older-link" href="http://pyviy.blogspot.com/2009/09/matplotlib.html" id="Blog1_blog-pager-older-link" title="Предыдущее">Предыдущее</a>
+</span>
+<a class="home-link" href="http://pyviy.blogspot.com/">Главная страница</a>
+</div>
+<div class="clear"></div>
+<div class="post-feeds">
+<div class="feed-links">
+Подписаться на:
+<a class="feed-link" href="http://pyviy.blogspot.com/feeds/3969660084459841630/comments/default" target="_blank" type="application/atom+xml">Комментарии к сообщению (Atom)</a>
+</div>
+</div>
+</div></div>
+</div>
+<div id="sidebar-wrapper">
+<div class="sidebar section" id="sidebar"><div class="widget HTML" id="HTML2">
+<h2 class="title">RSS</h2>
+<div class="widget-content">
+<a href="http://feeds.feedburner.com/pyviy" rel="alternate" title="Subscribe to my feed" type="application/rss+xml"><img alt="" style="border: 0pt none;" src="gcc_files/feed-icon32x32.png"></a><a href="http://feeds.feedburner.com/pyviy" rel="alternate" title="Subscribe to my feed" type="application/rss+xml">Подписаться</a>
+</div>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="http://www.blogger.com/rearrange?blogID=920988537392180762&amp;widgetType=HTML&amp;widgetId=HTML2&amp;action=editWidget&amp;sectionId=sidebar" onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML2"));' target="configHTML2" title="Изменить">
+<img alt="" src="gcc_files/icon18_wrench_allbkg.png" height="18" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div><div class="widget Text" id="Text1">
+<h2 class="title">О блоге</h2>
+<div class="widget-content">
+Блог о свободном программном обеспечении<br>
+</div>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="http://www.blogger.com/rearrange?blogID=920988537392180762&amp;widgetType=Text&amp;widgetId=Text1&amp;action=editWidget&amp;sectionId=sidebar" onclick='return _WidgetManager._PopupConfig(document.getElementById("Text1"));' target="configText1" title="Изменить">
+<img alt="" src="gcc_files/icon18_wrench_allbkg.png" height="18" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div><div class="widget Profile" id="Profile1">
+<h2>Обо мне</h2>
+<div class="widget-content">
+<dl class="profile-datablock">
+<dt class="profile-data">
+<a class="profile-name-link" href="http://www.blogger.com/profile/14118793713624648446" rel="author">
+Вий
+</a>
+</dt>
+</dl>
+<a class="profile-link" href="http://www.blogger.com/profile/14118793713624648446" rel="author">Весь профиль</a>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="http://www.blogger.com/rearrange?blogID=920988537392180762&amp;widgetType=Profile&amp;widgetId=Profile1&amp;action=editWidget&amp;sectionId=sidebar" onclick='return _WidgetManager._PopupConfig(document.getElementById("Profile1"));' target="configProfile1" title="Изменить">
+<img alt="" src="gcc_files/icon18_wrench_allbkg.png" height="18" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div>
+</div><div class="widget HTML" id="HTML5">
+<div class="widget-content">
+<noindex>
+<a href="http://www.publicons.de/"><img alt="POWERED BY PUBLICONS.DE" style="border-width: 0pt;" src="gcc_files/iam.png"></a><br>
+</noindex>
+</div>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="http://www.blogger.com/rearrange?blogID=920988537392180762&amp;widgetType=HTML&amp;widgetId=HTML5&amp;action=editWidget&amp;sectionId=sidebar" onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML5"));' target="configHTML5" title="Изменить">
+<img alt="" src="gcc_files/icon18_wrench_allbkg.png" height="18" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div><div class="widget Label" id="Label1">
+<h2>Ярлыки</h2>
+<div class="widget-content cloud-label-widget-content">
+<span class="label-size label-size-5">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/Python">Python</a>
+<span class="label-count" dir="ltr">(5)</span>
+</span>
+<span class="label-size label-size-4">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/matplotlib">matplotlib</a>
+<span class="label-count" dir="ltr">(4)</span>
+</span>
+<span class="label-size label-size-4">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/blogger">blogger</a>
+<span class="label-count" dir="ltr">(3)</span>
+</span>
+<span class="label-size label-size-3">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/Firefox">Firefox</a>
+<span class="label-count" dir="ltr">(2)</span>
+</span>
+<span class="label-size label-size-1">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/C%2FC%2B%2B">C/C++</a>
+<span class="label-count" dir="ltr">(1)</span>
+</span>
+<span class="label-size label-size-1">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/Google">Google</a>
+<span class="label-count" dir="ltr">(1)</span>
+</span>
+<span class="label-size label-size-1">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/NumPy">NumPy</a>
+<span class="label-count" dir="ltr">(1)</span>
+</span>
+<span class="label-size label-size-1">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/gcc">gcc</a>
+<span class="label-count" dir="ltr">(1)</span>
+</span>
+<span class="label-size label-size-1">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/linix">linix</a>
+<span class="label-count" dir="ltr">(1)</span>
+</span>
+<span class="label-size label-size-1">
+<a dir="ltr" href="http://pyviy.blogspot.com/search/label/vim">vim</a>
+<span class="label-count" dir="ltr">(1)</span>
+</span>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="http://www.blogger.com/rearrange?blogID=920988537392180762&amp;widgetType=Label&amp;widgetId=Label1&amp;action=editWidget&amp;sectionId=sidebar" onclick='return _WidgetManager._PopupConfig(document.getElementById("Label1"));' target="configLabel1" title="Изменить">
+<img alt="" src="gcc_files/icon18_wrench_allbkg.png" height="18" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div>
+</div><div class="widget BlogArchive" id="BlogArchive1">
+<h2>Архив блога</h2>
+<div class="widget-content">
+<div id="ArchiveList">
+<div id="BlogArchive1_ArchiveList">
+<ul class="hierarchy">
+<li class="archivedate expanded">
+<a class="toggle" href="javascript:void(0)">
+<span class="zippy toggle-open">▼&nbsp;</span>
+</a>
+<a class="post-count-link" href="http://pyviy.blogspot.com/search?updated-min=2010-01-01T00%3A00%3A00%2B05%3A00&amp;updated-max=2011-01-01T00%3A00%3A00%2B05%3A00&amp;max-results=1">2010</a>
+<span class="post-count" dir="ltr">(1)</span>
+<ul class="hierarchy">
+<li class="archivedate expanded">
+<a class="toggle" href="javascript:void(0)">
+<span class="zippy toggle-open">▼&nbsp;</span>
+</a>
+<a class="post-count-link" href="http://pyviy.blogspot.com/2010_12_01_archive.html">Декабрь</a>
+<span class="post-count" dir="ltr">(1)</span>
+<ul class="posts">
+<li><a href="http://pyviy.blogspot.com/2010/12/gcc.html">О GCC, компиляции и библиотеках</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="hierarchy">
+<li class="archivedate collapsed">
+<a class="toggle" href="javascript:void(0)">
+<span class="zippy">
+
+          ►&nbsp;
+        
+</span>
+</a>
+<a class="post-count-link" href="http://pyviy.blogspot.com/search?updated-min=2009-01-01T00%3A00%3A00%2B05%3A00&amp;updated-max=2010-01-01T00%3A00%3A00%2B05%3A00&amp;max-results=11">2009</a>
+<span class="post-count" dir="ltr">(11)</span>
+<ul class="hierarchy">
+<li class="archivedate collapsed">
+<a class="toggle" href="javascript:void(0)">
+<span class="zippy">
+
+          ►&nbsp;
+        
+</span>
+</a>
+<a class="post-count-link" href="http://pyviy.blogspot.com/2009_09_01_archive.html">Сентябрь</a>
+<span class="post-count" dir="ltr">(4)</span>
+<ul class="posts">
+<li><a href="http://pyviy.blogspot.com/2009/09/matplotlib.html">Пакет matplotlib. Наводим красивости</a></li>
+<li><a href="http://pyviy.blogspot.com/2009/09/blog-post.html">Подсветка синтаксиса в блоге. Используем онлайновы...</a></li>
+<li><a href="http://pyviy.blogspot.com/2009/09/numpy.html">Пакет NumPy. Краткое введение</a></li>
+<li><a href="http://pyviy.blogspot.com/2009/09/firefox-gtranslate-google.html">Дополнение Firefox gTranslate. Мгновенный доступ к...</a></li>
+</ul>
+</li>
+</ul>
+<ul class="hierarchy">
+<li class="archivedate collapsed">
+<a class="toggle" href="javascript:void(0)">
+<span class="zippy">
+
+          ►&nbsp;
+        
+</span>
+</a>
+<a class="post-count-link" href="http://pyviy.blogspot.com/2009_08_01_archive.html">Август</a>
+<span class="post-count" dir="ltr">(7)</span>
+<ul class="posts">
+<li><a href="http://pyviy.blogspot.com/2009/08/firefox-lazarus.html">Дополнение Firefox Lazarus. Восстановление данных ...</a></li>
+<li><a href="http://pyviy.blogspot.com/2009/08/matplotlib_21.html">Пакет matplotlib. График с дополнительной осью орд...</a></li>
+<li><a href="http://pyviy.blogspot.com/2009/08/blog-post_18.html">Как вставить в блог фрагмент кода с подсветкой син...</a></li>
+<li><a href="http://pyviy.blogspot.com/2009/08/blog-post_14.html">Как вставить картинку в блог</a></li>
+<li><a href="http://pyviy.blogspot.com/2009/08/matplotlib.html">Пакет matplotlib. Строим банальный график</a></li>
+<li><a href="http://pyviy.blogspot.com/2009/06/matplotlib.html">Пакет matplotlib. Установка, проверка, настройка</a></li>
+<li><a href="http://pyviy.blogspot.com/2009/08/blog-post.html">Приветствую Вас на Незамысловатом блоге</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="http://www.blogger.com/rearrange?blogID=920988537392180762&amp;widgetType=BlogArchive&amp;widgetId=BlogArchive1&amp;action=editWidget&amp;sectionId=sidebar" onclick='return _WidgetManager._PopupConfig(document.getElementById("BlogArchive1"));' target="configBlogArchive1" title="Изменить">
+<img alt="" src="gcc_files/icon18_wrench_allbkg.png" height="18" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div>
+</div><div class="widget HTML" id="HTML1">
+<div class="widget-content">
+<noindex>
+<script language="javascript" type="text/javascript">
+r=escape(document.referrer); u=escape(document.URL);
+s=(typeof(screen)=='undefined')?'':screen.width+'x'+screen.height+'x'+(screen.colorDepth?screen.colorDepth:screen.pixelDepth);
+</script>
+<table style="line-height: 0; width: 88px;" height="31" border="0" cellpadding="0" cellspacing="0" width="88"><tbody><tr style="height: 10px;">
+<td style="padding: 0pt; width: 38px; height: 10px;"><a href="http://www.24log.de/" target="_blank"><img alt="Besucherzahler" style="margin: 0pt; padding: 0pt;" src="gcc_files/bg24-6_1.gif" title="Besucherzahler " height="10" border="0" width="38"></a></td>
+<td style="padding: 0pt; width: 50px; height: 10px;"><a href="http://www.russianwoman.ca/" target="_blank"><img alt="russian women" style="margin: 0pt; padding: 0pt;" src="gcc_files/bg24-6_3.gif" height="10" border="0" width="50"></a></td></tr>
+<tr style="height: 21px;"><td style="padding: 0pt; width: 38px; height: 21px;"><a href="http://www.24log.ru/" target="_blank"><img alt="счетчик посещений" style="margin: 0pt; padding: 0pt;" src="gcc_files/bg24-6_2.gif" title="счетчик посещений" height="21" border="0" width="38"></a></td>
+<script language="javascript" type="text/javascript">
+document.write('<td style="padding:0px;width:50px;height:21px;"><a href="http://www.24log.ru/rating/rating.php?c=7" target="_blank"><img border="0" width="50" alt="Рейтинг: Компьютеры, программы" style="margin:0;padding:0;" src="http://counter.24log.ru/counter?id=92860&t=24&st=6&r='+r+'&s='+s+'&u='+u+'&rnd='+Math.random()+'" height="21" title="Показано число просмотров всего и за сегодня"/></a></td>');
+</script><td style="padding: 0px; width: 50px; height: 21px;"><a href="http://www.24log.ru/rating/rating.php?c=7" target="_blank"><img alt="Рейтинг: Компьютеры, программы" style="margin: 0pt; padding: 0pt;" src="gcc_files/counter.png" title="Показано число просмотров всего и за сегодня" height="21" border="0" width="50"></a></td></tr></tbody></table><noscript><a href="http://www.russianwoman.ca/index.php?Language=French">Rencontre femmes russes</a></noscript>
+</noindex>
+</div>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="http://www.blogger.com/rearrange?blogID=920988537392180762&amp;widgetType=HTML&amp;widgetId=HTML1&amp;action=editWidget&amp;sectionId=sidebar" onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML1"));' target="configHTML1" title="Изменить">
+<img alt="" src="gcc_files/icon18_wrench_allbkg.png" height="18" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div><div class="widget HTML" id="HTML3">
+<div class="widget-content">
+<noindex>
+<a id="clustrMapsLink" href="http://www3.clustrmaps.com/counter/maps.php?url=http://pyviy.blogspot.com/"><img id="clustrMapsImg" style="border: 0px none;" alt="Locations of visitors to this page" src="gcc_files/index2.jpeg" onerror="this.onerror=null; this.src='http://www2.clustrmaps.com/images/clustrmaps-back-soon.jpg'; document.getElementById('clustrMapsLink').href='http://www2.clustrmaps.com';" title="Locations of visitors to this page">
+</a>
+</noindex>
+</div>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="http://www.blogger.com/rearrange?blogID=920988537392180762&amp;widgetType=HTML&amp;widgetId=HTML3&amp;action=editWidget&amp;sectionId=sidebar" onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML3"));' target="configHTML3" title="Изменить">
+<img alt="" src="gcc_files/icon18_wrench_allbkg.png" height="18" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div><div class="widget HTML" id="HTML4">
+<div class="widget-content">
+<noindex>
+<a href="http://s05.flagcounter.com/more/2Iux"><img alt="free counters" src="gcc_files/a.png" border="0"></a>
+</noindex>
+</div>
+<div class="clear"></div>
+<span class="widget-item-control">
+<span class="item-control blog-admin">
+<a class="quickedit" href="http://www.blogger.com/rearrange?blogID=920988537392180762&amp;widgetType=HTML&amp;widgetId=HTML4&amp;action=editWidget&amp;sectionId=sidebar" onclick='return _WidgetManager._PopupConfig(document.getElementById("HTML4"));' target="configHTML4" title="Изменить">
+<img alt="" src="gcc_files/icon18_wrench_allbkg.png" height="18" width="18">
+</a>
+</span>
+</span>
+<div class="clear"></div>
+</div></div>
+</div>
+<!-- spacer for skins that want sidebar and main to be the same height-->
+<div class="clear">&nbsp;</div>
+</div>
+<!-- end content-wrapper -->
+<div id="footer-wrapper">
+<div class="footer section" id="footer"></div>
+</div>
+</div></div>
+<!-- end outer-wrapper -->
+<script type="text/javascript">
+if (window.jstiming) window.jstiming.load.tick('widgetJsBefore');
+</script><script type="text/javascript" src="gcc_files/3692008350-widgets.js"></script>
+<script type="text/javascript">
+if (typeof(BLOG_attachCsiOnload) != 'undefined' && BLOG_attachCsiOnload != null) { window['blogger_templates_experiment_id'] = "templatesV1";window['blogger_blog_id'] = '920988537392180762';BLOG_attachCsiOnload('item_'); }_WidgetManager._Init('http://www.blogger.com/rearrange?blogID=920988537392180762','http://pyviy.blogspot.com/2010/12/gcc.html','920988537392180762');
+_WidgetManager._SetPageActionUrl('http://www.blogger.com/display?blogID=920988537392180762','APq4FmDNaYiv6fOZuJxTYTriVfJwlZlGG98v5rWCvWEtXeXSsmDFiE2ODWN1Qq2ADpXJtKIoTqeMLt0dxPRkRF4OCbF4EKlykC7ItWW3dILrCQKJZhsuz_s=','AOuZoY7eX7Ma08CajiXC5hwOzeBUQnAetg:1317276617232');
+_WidgetManager._SetDataContext([{'name': 'blog', 'data': {'title': 'Незамысловатый блог', 'pageType': 'item', 'url': 'http://pyviy.blogspot.com/2010/12/gcc.html', 'canonicalUrl': 'http://pyviy.blogspot.com/2010/12/gcc.html', 'homepageUrl': 'http://pyviy.blogspot.com/', 'blogspotFaviconUrl': 'http://pyviy.blogspot.com/favicon.ico', 'enabledCommentProfileImages': true, 'searchLabel': '', 'searchQuery': '', 'pageName': 'О GCC, компиляции и библиотеках', 'pageTitle': 'Незамысловатый блог: О GCC, компиляции и библиотеках', 'encoding': 'UTF-8', 'locale': 'ru', 'isPrivate': false, 'isMobile': false, 'mobileClass': '', 'languageDirection': 'ltr', 'feedLinks': '\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42Незамысловатый блог - Atom\42 href\75\42http://pyviy.blogspot.com/feeds/posts/default\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/rss+xml\42 title\75\42Незамысловатый блог - RSS\42 href\75\42http://pyviy.blogspot.com/feeds/posts/default?alt\75rss\42 /\76\n\74link rel\75\42service.post\42 type\75\42application/atom+xml\42 title\75\42Незамысловатый блог - Atom\42 href\75\42http://www.blogger.com/feeds/920988537392180762/posts/default\42 /\76\n\74link rel\75\42EditURI\42 type\75\42application/rsd+xml\42 title\75\42RSD\42 href\75\42http://www.blogger.com/rsd.g?blogID\75920988537392180762\42 /\76\n\74link rel\75\42alternate\42 type\75\42application/atom+xml\42 title\75\42Незамысловатый блог - Atom\42 href\75\42http://pyviy.blogspot.com/feeds/3969660084459841630/comments/default\42 /\76\n', 'meTag': '', 'openIdOpTag': '', 'postImageThumbnailUrl': 'http://lh4.ggpht.com/_oMYflydwAbM/TPen30DdpbI/AAAAAAAAALs/KLuD6--mHi8/s72-c/lib.png', 'imageSrcTag': '\74link rel\75\42image_src\42 href\75\42http://lh4.ggpht.com/_oMYflydwAbM/TPen30DdpbI/AAAAAAAAALs/KLuD6--mHi8/s72-c/lib.png\42 /\76\n', 'latencyHeadScript': '\74script type\75\42text/javascript\42\76(function() { var a\75window;function c(b){this.t\75{};this.tick\75function(b,i,d){d\75d!\75void 0?d:(new Date).getTime();this.t[b]\75[d,i]};this.tick(\42start\42,null,b)}var e\75new c;a.jstiming\75{Timer:c,load:e};try{var g\75null;a.chrome\46\46a.chrome.csi\46\46(g\75Math.floor(a.chrome.csi().pageT));g\75\75null\46\46a.gtbExternal\46\46(g\75a.gtbExternal.pageT());g\75\75null\46\46a.external\46\46(g\75a.external.pageT);g\46\46(a.jstiming.pt\75g)}catch(h){};a.tickAboveFold\75function(b){var f\0750;if(b.offsetParent){do f+\75b.offsetTop;while(b\75b.offsetParent)}b\75f;b\74\075750\46\46a.jstiming.load.tick(\42aft\42)};var j\75!1;function k(){j||(j\75!0,a.jstiming.load.tick(\42firstScrollTime\42))}a.addEventListener?a.addEventListener(\42scroll\42,k,!1):a.attachEvent(\42onscroll\42,k);\n })();\74/script\076', 'mobileHeadScript': ''}}]);
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML2', 'sidebar', null, document.getElementById('HTML2'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_TextView', new _WidgetInfo('Text1', 'sidebar', null, document.getElementById('Text1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_ProfileView', new _WidgetInfo('Profile1', 'sidebar', null, document.getElementById('Profile1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML5', 'sidebar', null, document.getElementById('HTML5'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_LabelView', new _WidgetInfo('Label1', 'sidebar', null, document.getElementById('Label1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_BlogArchiveView', new _WidgetInfo('BlogArchive1', 'sidebar', null, document.getElementById('BlogArchive1'), {'languageDirection': 'ltr'}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML1', 'sidebar', null, document.getElementById('HTML1'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML3', 'sidebar', null, document.getElementById('HTML3'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HTMLView', new _WidgetInfo('HTML4', 'sidebar', null, document.getElementById('HTML4'), {}, 'displayModeFull'));
+_WidgetManager._RegisterWidget('_HeaderView', new _WidgetInfo('Header1', 'header'));
+_WidgetManager._RegisterWidget('_NavbarView', new _WidgetInfo('Navbar1', 'navbar'));
+_WidgetManager._RegisterWidget('_BlogView', new _WidgetInfo('Blog1', 'main', null, document.getElementById('Blog1'), {'cmtInteractionsEnabled': false, 'showBacklinks': true, 'postId': '3969660084459841630'}, 'displayModeFull'));
+</script>
+
+</body></html>
